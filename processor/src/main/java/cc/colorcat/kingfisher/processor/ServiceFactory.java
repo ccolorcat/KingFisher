@@ -30,6 +30,8 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 
+import cc.colorcat.kingfisher.core.BaseCall;
+
 /**
  * Author: cxx
  * Date: 2018-09-29
@@ -50,11 +52,12 @@ final class ServiceFactory {
 
     void writeOut(Filer filer) {
         ClassName className = ClassName.get(packageElement.getQualifiedName().toString(), classSimpleName);
-        TypeSpec typeSpec = TypeSpec.classBuilder(className)
+        TypeSpec service = TypeSpec.classBuilder(className)
                 .addSuperinterface(TypeName.get(interfaceElement.asType()))
                 .addMethods(Utils.map(methodFactories))
                 .build();
-        JavaFile file = JavaFile.builder(packageElement.getQualifiedName().toString(), typeSpec)
+        JavaFile file = JavaFile.builder(packageElement.getQualifiedName().toString(), service)
+                .addStaticImport(BaseCall.class)
                 .build();
         try {
             file.writeTo(filer);

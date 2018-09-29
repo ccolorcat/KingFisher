@@ -46,7 +46,7 @@ class MethodFactory {
     }
 
     MethodSpec generateMethodSpec() {
-        return null;
+        return MethodSpec.overriding(executableElement).build();
     }
 
     private void parse() {
