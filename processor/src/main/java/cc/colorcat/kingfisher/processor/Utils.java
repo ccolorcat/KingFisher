@@ -16,8 +16,15 @@
 
 package cc.colorcat.kingfisher.processor;
 
+import com.squareup.javapoet.MethodSpec;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 
 /**
  * Author: cxx
@@ -25,6 +32,24 @@ import javax.lang.model.element.ElementKind;
  * GitHub: https://github.com/ccolorcat
  */
 final class Utils {
+
+    static List<MethodSpec> map(List<? extends MethodFactory> factories) {
+        final int size = factories.size();
+        List<MethodSpec> methodSpecs = new ArrayList<>(size);
+        for (int i = 0; i < size; ++i) {
+            methodSpecs.add(factories.get(i).generateMethodSpec());
+        }
+        return methodSpecs;
+    }
+
+    static List<MethodFactory> map(TypeElement interfaceElement, List<? extends ExecutableElement> elements) {
+        final int size = elements.size();
+        List<MethodFactory> factories = new ArrayList<>(size);
+        for (int i = 0; i < size; ++i) {
+            factories.add(new MethodFactory(interfaceElement, elements.get(i)));
+        }
+        return factories;
+    }
 
     static void assertInterface(Element element) {
         if (element.getKind() != ElementKind.INTERFACE) {

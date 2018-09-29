@@ -16,17 +16,19 @@
 
 package cc.colorcat.kingfisher.processor;
 
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.TypeName;
+import com.squareup.javapoet.TypeSpec;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.processing.Filer;
-import javax.annotation.processing.Messager;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
-
-import cc.colorcat.netbird.Method;
-import cc.colorcat.netbird.Parser;
 
 /**
  * Author: cxx
@@ -34,39 +36,40 @@ import cc.colorcat.netbird.Parser;
  * GitHub: https://github.com/ccolorcat
  */
 final class ServiceFactory {
-    Messager messager;
-    String packageName;
-    String interfaceSimpleName;
-    String classSimpleName;
-    List<? extends ExecutableElement> methods;
-
-    private Parser<?> requestParser;
-    private String requestUrl;
-    private String requestPath;
-    private Method requestMethod;
-    private String requestRelativePath;
-    private List<Pair<String, String>> requestParameters; // name-value, value 实际是形参的 name
-    private List<Pair<String, String>> requestHeader; // name-value, value 实际是形参的 name
+    private final PackageElement packageElement;
+    private final TypeElement interfaceElement;
+    private final String classSimpleName;
+    private final List<? extends MethodFactory> methodFactories;
 
     private ServiceFactory(Builder builder) {
-
+        this.packageElement = builder.packageElement;
+        this.interfaceElement = builder.interfaceElement;
+        this.classSimpleName = builder.classSimpleName;
+        this.methodFactories = builder.methodFactories;
     }
 
     void writeOut(Filer filer) {
+        ClassName className = ClassName.get(packageElement.getQualifiedName().toString(), classSimpleName);
+        TypeSpec typeSpec = TypeSpec.classBuilder(className)
+                .addSuperinterface(TypeName.get(interfaceElement.asType()))
+                .addMethods(Utils.map(methodFactories))
+                .build();
+        JavaFile file = JavaFile.builder(packageElement.getQualifiedName().toString(), typeSpec)
+                .build();
+        try {
+            file.writeTo(filer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
+
 
     static class Builder {
         private PackageElement packageElement;
         private TypeElement interfaceElement;
-        private List<ExecutableElement> executableElements = new ArrayList<>();
         private String classSimpleName;
-
-        private String requestUrl;
-        private String requestPath;
-        private Method requestMethod;
-        private String requestRelativePath;
-        private List<Pair<String, String>> requestParameters; // name-value, value 实际是形参的 name
-        private List<Pair<String, String>> requestHeader; // name-value, value 实际是形参的 name
+        private List<ExecutableElement> executableElements = new ArrayList<>();
+        private List<MethodFactory> methodFactories;
 
         Builder setPackageElement(PackageElement packageElement) {
             this.packageElement = packageElement;
@@ -83,16 +86,12 @@ final class ServiceFactory {
             return this;
         }
 
-
         ServiceFactory build() {
             Utils.checkNotNull(packageElement, "packageElement is null");
             Utils.checkNotNull(interfaceElement, "interfaceElement is null");
-            generate();
+            classSimpleName = interfaceElement.getSimpleName() + "Service";
+            methodFactories = Utils.map(interfaceElement, executableElements);
             return new ServiceFactory(this);
-        }
-
-        private void generate() {
-            this.classSimpleName = interfaceElement.getSimpleName() + "Service";
         }
     }
 }
