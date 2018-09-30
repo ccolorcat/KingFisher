@@ -37,5 +37,5 @@ public interface GithubApi {
 
     @Url("http://www.imooc.com/")
     @GET("api/teacher")
-    Call<String> lsitCourses(@Param("type") int type, @Param("num") int num);
+    Call<String> listCourses(@Param("type") int type, @Param("num") int num);
 }

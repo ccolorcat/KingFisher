@@ -21,6 +21,6 @@ public class ExampleUnitTest {
     public void testKingFisher() throws IOException {
         GithubApi api = new GithubApiService();
         System.out.println(api.listRepos("ccolorcat").execute());
-        System.out.println(api.lsitCourses(4, 30).execute());
+        System.out.println(api.listCourses(4, 30).execute());
     }
 }
