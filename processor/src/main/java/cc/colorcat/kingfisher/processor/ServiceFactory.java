@@ -27,10 +27,9 @@ import java.util.List;
 
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
-
-import cc.colorcat.kingfisher.core.BaseCall;
 
 /**
  * Author: cxx
@@ -54,10 +53,11 @@ final class ServiceFactory {
         ClassName className = ClassName.get(packageElement.getQualifiedName().toString(), classSimpleName);
         TypeSpec service = TypeSpec.classBuilder(className)
                 .addSuperinterface(TypeName.get(interfaceElement.asType()))
+                .addModifiers(Modifier.PUBLIC)
                 .addMethods(Utils.map(methodFactories))
                 .build();
         JavaFile file = JavaFile.builder(packageElement.getQualifiedName().toString(), service)
-                .addStaticImport(BaseCall.class)
+//                .addStaticImport(KingFisher.class)
                 .build();
         try {
             file.writeTo(filer);

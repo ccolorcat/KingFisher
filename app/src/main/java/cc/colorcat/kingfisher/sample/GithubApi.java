@@ -20,6 +20,7 @@ import java.util.List;
 
 import cc.colorcat.kingfisher.annotation.Api;
 import cc.colorcat.kingfisher.annotation.GET;
+import cc.colorcat.kingfisher.core.Call;
 
 /**
  * Author: cxx
@@ -30,5 +31,5 @@ import cc.colorcat.kingfisher.annotation.GET;
 public interface GithubApi {
 
     @GET
-    List<String> listRepos(String user, int num);
+    Call<List<String>> listRepos(String user, int num);
 }

@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import cc.colorcat.netbird.MRequest;
+import cc.colorcat.netbird.NetBird;
 import cc.colorcat.netbird.Parser;
 
 /**
@@ -28,53 +29,61 @@ import cc.colorcat.netbird.Parser;
  * GitHub: https://github.com/ccolorcat
  */
 public final class BaseCall<T> implements Call<T> {
-    private KingFisher kingFisher;
+    private NetBird netBird;
     private MRequest.Builder<T> builder;
     private Object tag;
 
-    BaseCall(KingFisher fisher, Parser<T> parser) {
-        this.kingFisher = fisher;
+    BaseCall(NetBird netBird, Parser<? extends T> parser) {
+        this.netBird = netBird;
         this.builder = new MRequest.Builder<>(parser);
     }
 
-    public void addParameter(String name, String value) {
+    public BaseCall<T> addParameter(String name, String value) {
         builder.add(name, value);
+        return this;
     }
 
-    public void addParameter(Map<String, String> parameters) {
+    public BaseCall<T> addParameters(Map<String, String> parameters) {
         for (Map.Entry<String, String> nameAndValue : parameters.entrySet()) {
             builder.add(nameAndValue.getKey(), nameAndValue.getValue());
         }
+        return this;
     }
 
-    public void addHeader(Map<String, String> headers) {
+    public BaseCall<T> addHeader(String name, String value) {
+        builder.addHeader(name, value);
+        return this;
+    }
+
+    public BaseCall<T> addHeaders(Map<String, String> headers) {
         for (Map.Entry<String, String> nameAndValue : headers.entrySet()) {
             builder.add(nameAndValue.getKey(), nameAndValue.getValue());
         }
+        return this;
     }
 
     @Override
     public T execute() throws IOException {
-        return kingFisher.netBird.execute(request());
+        return netBird.execute(request());
     }
 
     @Override
     public void enqueue(Callback<T> callback) {
         builder.listener(callback);
-        kingFisher.netBird.send(request());
+        netBird.send(request());
     }
 
     @Override
     public void cancelIfWaiting() {
         if (tag != null) {
-            kingFisher.netBird.cancelWaiting(tag);
+            netBird.cancelWaiting(tag);
         }
     }
 
     @Override
     public void forceCancel() {
         if (tag != null) {
-            kingFisher.netBird.cancelAll(tag);
+            netBird.cancelAll(tag);
         }
     }
 

@@ -64,5 +64,9 @@ final class Utils {
         return value;
     }
 
+    static boolean isNotBlank(String text) {
+        return text != null && text.trim().length() > 0;
+    }
+
     private Utils() {throw new AssertionError("no instance");}
 }

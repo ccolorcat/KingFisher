@@ -16,6 +16,10 @@
 
 package cc.colorcat.kingfisher.core;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
 import cc.colorcat.netbird.NetBird;
 import cc.colorcat.netbird.Parser;
 
@@ -25,9 +29,21 @@ import cc.colorcat.netbird.Parser;
  * GitHub: https://github.com/ccolorcat
  */
 public class KingFisher {
-    NetBird netBird;
+    private NetBird netBird;
+    private List<ParserFactory> parserFactories = new ArrayList<>();
 
-    public <T> BaseCall<T> newCall() {
-        return new BaseCall<T>(this, null);
+    public <T> BaseCall<T> newCall(Type typeOfT) {
+        Parser<? extends T> parser = newParser(typeOfT);
+        return new BaseCall<>(netBird, parser);
+    }
+
+    private <T> Parser<? extends T> newParser(Type typeOfT) {
+        for (int i = 0, size = parserFactories.size(); i < size; ++i) {
+            Parser<? extends T> parser = parserFactories.get(i).newParser(typeOfT);
+            if (parser != null) {
+                return parser;
+            }
+        }
+        throw new UnsupportedOperationException("no parser supported");
     }
 }

@@ -31,7 +31,9 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
+import javax.tools.Diagnostic;
 
 import cc.colorcat.kingfisher.annotation.Api;
 
@@ -75,6 +77,10 @@ public class ApiProcessor extends AbstractProcessor {
             for (Element element : api.getEnclosedElements()) {
                 if (element instanceof ExecutableElement) {
                     builder.addExecutableElement((ExecutableElement) element);
+                    TypeMirror returnType = ((ExecutableElement) element).getReturnType();
+                    messager.printMessage(Diagnostic.Kind.NOTE, returnType.toString());
+                    messager.printMessage(Diagnostic.Kind.NOTE, returnType.getKind().name());
+                    messager.printMessage(Diagnostic.Kind.NOTE, returnType.getKind().toString());
                 }
             }
             builder.build().writeOut(filer);
