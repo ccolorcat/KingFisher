@@ -100,10 +100,10 @@ class MethodFactory {
         }
         builder.addStatement("call.method($T.$N)", Method.class, requestMethod.name());
         for (Pair<String, String> params : requestParameters) {
-            builder.addStatement("call.addParameter($S, $T.valueOf($N))", params.first, String.class, params.second);
+            builder.addStatement("call.parameter($S, $T.valueOf($N))", params.first, String.class, params.second);
         }
         for (Pair<String, String> header : requestHeaders) {
-            builder.addStatement("call.addHeader($S, $T.valueOf($N))", header.first, String.class, header.second);
+            builder.addStatement("call.header($S, $T.valueOf($N))", header.first, String.class, header.second);
         }
         return builder.addStatement("return call").build();
     }

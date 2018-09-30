@@ -51,21 +51,21 @@ public final class BaseCall<T> implements Call<T> {
         this.builder.method(method);
     }
 
-    public void addParameter(String name, String value) {
+    public void parameter(String name, String value) {
         builder.add(name, value);
     }
 
-    public void addParameters(Map<String, String> parameters) {
+    public void parameters(Map<String, String> parameters) {
         for (Map.Entry<String, String> nameAndValue : parameters.entrySet()) {
             builder.add(nameAndValue.getKey(), nameAndValue.getValue());
         }
     }
 
-    public void addHeader(String name, String value) {
+    public void header(String name, String value) {
         builder.addHeader(name, value);
     }
 
-    public void addHeaders(Map<String, String> headers) {
+    public void headers(Map<String, String> headers) {
         for (Map.Entry<String, String> nameAndValue : headers.entrySet()) {
             builder.add(nameAndValue.getKey(), nameAndValue.getValue());
         }

@@ -23,8 +23,8 @@ public class Main {
         call.url("https://www.baidu.com");
         call.path("sdfsdf".replace("{user}", user));
         call.method(Method.GET);
-        call.addParameter("id", String.valueOf(123));
-        call.addHeader("token", String.valueOf("test"));
+        call.parameter("id", String.valueOf(123));
+        call.header("token", String.valueOf("test"));
         return call;
     }
 }
