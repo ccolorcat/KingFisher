@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
-apply plugin: 'java-library'
+package cc.colorcat.kingfisher.core;
 
-dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.squareup:javapoet:1.11.1'
-    implementation 'com.google.auto.service:auto-service:1.0-rc4'
-    implementation 'com.github.ccolorcat.NetBird:netbird:v4.3.4'
-    implementation 'com.github.ccolorcat.NetBird:netbird-gson-parser:v4.3.4'
-    implementation project(':annotation')
-    implementation project(':core')
+import cc.colorcat.netbird.NetBird;
+import cc.colorcat.netbird.Parser;
+
+/**
+ * Author: cxx
+ * Date: 2018-09-29
+ * GitHub: https://github.com/ccolorcat
+ */
+public class KingFisher {
+    NetBird netBird;
+
+    public <T> BaseCall<T> newCall() {
+        return new BaseCall<T>(this, null);
+    }
 }
-
-sourceCompatibility = "7"
-targetCompatibility = "7"

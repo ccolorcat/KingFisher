@@ -27,6 +27,7 @@ import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
@@ -54,6 +55,11 @@ public class ApiProcessor extends AbstractProcessor {
     }
 
     @Override
+    public SourceVersion getSupportedSourceVersion() {
+        return SourceVersion.latestSupported();
+    }
+
+    @Override
     public Set<String> getSupportedAnnotationTypes() {
         return Collections.singleton(Api.class.getCanonicalName());
     }
@@ -73,6 +79,6 @@ public class ApiProcessor extends AbstractProcessor {
             }
             builder.build().writeOut(filer);
         }
-        return false;
+        return true;
     }
 }

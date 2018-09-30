@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-include ':app', ':annotation', ':processor'
+include ':app', ':annotation', ':processor', ':core'

@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 
-apply plugin: 'java-library'
+package cc.colorcat.kingfisher.core;
 
-dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.squareup:javapoet:1.11.1'
-    implementation 'com.google.auto.service:auto-service:1.0-rc4'
-    implementation 'com.github.ccolorcat.NetBird:netbird:v4.3.4'
-    implementation 'com.github.ccolorcat.NetBird:netbird-gson-parser:v4.3.4'
-    implementation project(':annotation')
-    implementation project(':core')
+import java.io.IOException;
+
+/**
+ * Author: cxx
+ * Date: 2018-09-29
+ * GitHub: https://github.com/ccolorcat
+ */
+public interface Call<T> {
+    T execute() throws IOException;
+
+    void enqueue(Callback<T> callback);
+
+    void cancelIfWaiting();
+
+    void forceCancel();
 }
-
-sourceCompatibility = "7"
-targetCompatibility = "7"
