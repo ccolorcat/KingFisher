@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * GitHub: https://github.com/ccolorcat
  */
 @Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.CLASS)
 public @interface HEAD {
     String value() default "";
 }

@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * GitHub: https://github.com/ccolorcat
  */
 @Target(ElementType.PARAMETER)
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.CLASS)
 public @interface Param {
     String value();
 }
