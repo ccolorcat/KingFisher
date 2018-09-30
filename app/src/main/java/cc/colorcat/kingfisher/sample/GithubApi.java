@@ -18,6 +18,7 @@ package cc.colorcat.kingfisher.sample;
 
 import cc.colorcat.kingfisher.annotation.Api;
 import cc.colorcat.kingfisher.annotation.GET;
+import cc.colorcat.kingfisher.annotation.Param;
 import cc.colorcat.kingfisher.annotation.Path;
 import cc.colorcat.kingfisher.annotation.Url;
 import cc.colorcat.kingfisher.core.Call;
@@ -33,4 +34,8 @@ public interface GithubApi {
     @Url("https://api.github.com/")
     @GET("users/{user}/repos")
     Call<String> listRepos(@Path("user") String user);
+
+    @Url("http://www.imooc.com/")
+    @GET("api/teacher")
+    Call<String> lsitCourses(@Param("type") int type, @Param("num") int num);
 }

@@ -75,8 +75,8 @@ class MethodFactory {
     MethodSpec generateMethodSpec() {
         parse();
         MethodSpec.Builder builder = MethodSpec.overriding(executableElement)
-                .addStatement(CodeBlock.of("$T type = new $T<$T>() {}.generateType()", Type.class, TypeToken.class, returnTypeName))
-                .addStatement(CodeBlock.of("$T<$T> call = $T.call(type)", BaseCall.class, returnTypeName, KingFisher.class));
+                .addStatement(CodeBlock.of("$T dataType = new $T<$T>() {}.generateType()", Type.class, TypeToken.class, returnTypeName))
+                .addStatement(CodeBlock.of("$T<$T> call = $T.call(dataType)", BaseCall.class, returnTypeName, KingFisher.class));
         if (Utils.isNotBlank(requestUrl)) {
             builder.addStatement("call.url($S)", requestUrl);
         }
