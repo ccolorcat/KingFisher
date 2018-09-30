@@ -16,10 +16,10 @@
 
 package cc.colorcat.kingfisher.sample;
 
-import java.util.List;
-
 import cc.colorcat.kingfisher.annotation.Api;
 import cc.colorcat.kingfisher.annotation.GET;
+import cc.colorcat.kingfisher.annotation.Path;
+import cc.colorcat.kingfisher.annotation.Url;
 import cc.colorcat.kingfisher.core.Call;
 
 /**
@@ -30,6 +30,7 @@ import cc.colorcat.kingfisher.core.Call;
 @Api
 public interface GithubApi {
 
-    @GET
-    Call<List<String>> listRepos(String user, int num);
+    @Url("https://api.github.com/")
+    @GET("users/{user}/repos")
+    Call<String> listRepos(@Path("user") String user);
 }

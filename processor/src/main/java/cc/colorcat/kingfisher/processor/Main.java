@@ -18,16 +18,13 @@ package cc.colorcat.kingfisher.processor;
 
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
-import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.TypeVariableName;
 import com.squareup.javapoet.WildcardTypeName;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Arrays;
 import java.util.List;
 
 import cc.colorcat.kingfisher.core.Call;
@@ -59,6 +56,12 @@ public class Main {
         System.out.println(raw.compareTo(ClassName.get(Call.class)));
         System.out.println(ptn.rawType);
         System.out.println(ptn.typeArguments);
+        System.out.println(ptn.typeArguments.get(0));
+
+//        Test<Call<List<String>>> test = new Test<Call<List<String>>>() {};
+//        System.out.println(test.generateTypes()[0].getTypeName());
+
+//        System.out.println(token.getSubtype(Call.class));
     }
 
     static abstract class Test<T> {

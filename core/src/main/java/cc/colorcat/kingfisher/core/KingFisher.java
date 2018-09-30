@@ -29,19 +29,31 @@ import cc.colorcat.netbird.Parser;
  * GitHub: https://github.com/ccolorcat
  */
 public class KingFisher {
-    private NetBird netBird;
+    private static KingFisher instance = new KingFisher();
+
+    public static <T> BaseCall<T> call(Type typeOfT) {
+        return instance.newCall(typeOfT);
+    }
+
+    private NetBird netBird = new NetBird.Builder("https://www.baidu.com/").build();
+
     private List<ParserFactory> parserFactories = new ArrayList<>();
 
-    public <T> BaseCall<T> newCall(Type typeOfT) {
+    {
+        parserFactories.add(new StringParserFactory());
+    }
+
+    private <T> BaseCall<T> newCall(Type typeOfT) {
         Parser<? extends T> parser = newParser(typeOfT);
         return new BaseCall<>(netBird, parser);
     }
 
+    @SuppressWarnings("unchecked")
     private <T> Parser<? extends T> newParser(Type typeOfT) {
         for (int i = 0, size = parserFactories.size(); i < size; ++i) {
-            Parser<? extends T> parser = parserFactories.get(i).newParser(typeOfT);
+            Parser<?> parser = parserFactories.get(i).newParser(typeOfT);
             if (parser != null) {
-                return parser;
+                return (Parser<? extends T>) parser;
             }
         }
         throw new UnsupportedOperationException("no parser supported");

@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import cc.colorcat.netbird.MRequest;
+import cc.colorcat.netbird.Method;
 import cc.colorcat.netbird.NetBird;
 import cc.colorcat.netbird.Parser;
 
@@ -38,28 +39,36 @@ public final class BaseCall<T> implements Call<T> {
         this.builder = new MRequest.Builder<>(parser);
     }
 
-    public BaseCall<T> addParameter(String name, String value) {
-        builder.add(name, value);
-        return this;
+    public void url(String url) {
+        this.builder.url(url);
     }
 
-    public BaseCall<T> addParameters(Map<String, String> parameters) {
+    public void path(String path) {
+        this.builder.path(path);
+    }
+
+    public void method(Method method) {
+        this.builder.method(method);
+    }
+
+    public void addParameter(String name, String value) {
+        builder.add(name, value);
+    }
+
+    public void addParameters(Map<String, String> parameters) {
         for (Map.Entry<String, String> nameAndValue : parameters.entrySet()) {
             builder.add(nameAndValue.getKey(), nameAndValue.getValue());
         }
-        return this;
     }
 
-    public BaseCall<T> addHeader(String name, String value) {
+    public void addHeader(String name, String value) {
         builder.addHeader(name, value);
-        return this;
     }
 
-    public BaseCall<T> addHeaders(Map<String, String> headers) {
+    public void addHeaders(Map<String, String> headers) {
         for (Map.Entry<String, String> nameAndValue : headers.entrySet()) {
             builder.add(nameAndValue.getKey(), nameAndValue.getValue());
         }
-        return this;
     }
 
     @Override

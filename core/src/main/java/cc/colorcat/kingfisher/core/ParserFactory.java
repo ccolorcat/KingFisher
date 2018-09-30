@@ -10,5 +10,5 @@ import cc.colorcat.netbird.Parser;
  * GitHub: https://github.com/ccolorcat
  */
 public interface ParserFactory {
-    <T> Parser<? extends T> newParser(Type typeOfT);
+    Parser<?> newParser(Type typeOfT);
 }

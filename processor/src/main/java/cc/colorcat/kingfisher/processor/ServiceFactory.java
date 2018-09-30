@@ -31,6 +31,8 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 
+import cc.colorcat.netbird.Method;
+
 /**
  * Author: cxx
  * Date: 2018-09-29
@@ -57,7 +59,6 @@ final class ServiceFactory {
                 .addMethods(Utils.map(methodFactories))
                 .build();
         JavaFile file = JavaFile.builder(packageElement.getQualifiedName().toString(), service)
-//                .addStaticImport(KingFisher.class)
                 .build();
         try {
             file.writeTo(filer);
