@@ -26,9 +26,11 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.processing.Messager;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.tools.Diagnostic;
 
 import cc.colorcat.kingfisher.annotation.DELETE;
 import cc.colorcat.kingfisher.annotation.GET;
@@ -203,6 +205,34 @@ class MethodFactory {
             returnTypeName = typeArguments.get(0);
         } else {
             throw new RuntimeException("Missing type parameter.");
+        }
+    }
+
+    static class Builder {
+        Messager messager;
+        ExecutableElement executable;
+        String url;
+        String path;
+        List<Pair<String, String>> relativePaths;
+        List<Pair<String, String>> parameters;
+        String parameterMap;
+        List<Pair<String, String>> headers;
+        String headerMap;
+        TypeName returnTypeName;
+
+        Builder(ExecutableElement executable) {
+            this.executable = executable;
+            this.relativePaths = new ArrayList<>(1);
+            this.parameters = new ArrayList<>(4);
+            this.headers = new ArrayList<>(1);
+        }
+
+//        MethodFactory build() {
+//
+//        }
+
+        private void log(String msg) {
+            messager.printMessage(Diagnostic.Kind.NOTE, msg);
         }
     }
 }
