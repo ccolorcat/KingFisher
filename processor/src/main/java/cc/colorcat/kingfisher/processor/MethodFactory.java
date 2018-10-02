@@ -55,28 +55,29 @@ import cc.colorcat.netbird.Method;
  * GitHub: https://github.com/ccolorcat
  */
 class MethodFactory {
-    private final TypeElement interfaceElement;
-    private final ExecutableElement executableElement;
-    private String requestUrl;
-    private String requestPath;
-    private Method requestMethod;
+    Messager messager;
+    final TypeElement interfaceElement;
+    final ExecutableElement methodElement;
+    String requestUrl;
+    String requestPath;
+    Method requestMethod;
     // 第一个值用以替换 requestPath 中对应的值，第二个值对应形参 name
-    private Pair<String, String> requestRelativePath;
-    private List<Pair<String, String>> relativePath = new ArrayList<>();
+    Pair<String, String> requestRelativePath;
+    List<Pair<String, String>> relativePath = new ArrayList<>();
     // name-value, value 实际是形参的 name
-    private List<Pair<String, String>> requestParameters = new ArrayList<>();
+    List<Pair<String, String>> requestParameters = new ArrayList<>();
     // name-value, value 实际是形参的 name
-    private List<Pair<String, String>> requestHeaders = new ArrayList<>();
-    private TypeName returnTypeName;
+    List<Pair<String, String>> requestHeaders = new ArrayList<>();
+    TypeName returnTypeName;
 
-    MethodFactory(TypeElement interfaceElement, ExecutableElement executableElement) {
+    MethodFactory(TypeElement interfaceElement, ExecutableElement methodElement) {
         this.interfaceElement = interfaceElement;
-        this.executableElement = executableElement;
+        this.methodElement = methodElement;
     }
 
     MethodSpec generateMethodSpec() {
         parse();
-        MethodSpec.Builder builder = MethodSpec.overriding(executableElement)
+        MethodSpec.Builder builder = MethodSpec.overriding(methodElement)
                 .addStatement(CodeBlock.of("$T dataType = new $T<$T>() {}.generateType()", Type.class, TypeToken.class, returnTypeName))
                 .addStatement(CodeBlock.of("$T<$T> call = $T.call(dataType)", BaseCall.class, returnTypeName, KingFisher.class));
         if (Utils.isNotBlank(requestUrl)) {
@@ -118,50 +119,50 @@ class MethodFactory {
     }
 
     private void parseUrl() {
-        Url url = executableElement.getAnnotation(Url.class);
+        Url url = methodElement.getAnnotation(Url.class);
         if (url != null) {
             requestUrl = url.value();
         }
     }
 
     private void parsePathAndMethod() {
-        GET get = executableElement.getAnnotation(GET.class);
+        GET get = methodElement.getAnnotation(GET.class);
         if (get != null) {
             requestPath = get.value();
             requestMethod = Method.GET;
             return;
         }
-        POST post = executableElement.getAnnotation(POST.class);
+        POST post = methodElement.getAnnotation(POST.class);
         if (post != null) {
             requestPath = post.value();
             requestMethod = Method.POST;
             return;
         }
-        DELETE delete = executableElement.getAnnotation(DELETE.class);
+        DELETE delete = methodElement.getAnnotation(DELETE.class);
         if (delete != null) {
             requestPath = delete.value();
             requestMethod = Method.DELETE;
             return;
         }
-        PUT put = executableElement.getAnnotation(PUT.class);
+        PUT put = methodElement.getAnnotation(PUT.class);
         if (put != null) {
             requestPath = put.value();
             requestMethod = Method.PUT;
             return;
         }
-        HEAD head = executableElement.getAnnotation(HEAD.class);
+        HEAD head = methodElement.getAnnotation(HEAD.class);
         if (head != null) {
             requestPath = head.value();
             requestMethod = Method.HEAD;
             return;
         }
-        TRACE trace = executableElement.getAnnotation(TRACE.class);
+        TRACE trace = methodElement.getAnnotation(TRACE.class);
         if (trace != null) {
             requestPath = trace.value();
             requestMethod = Method.TRACE;
             return;
         }
-        OPTIONS options = executableElement.getAnnotation(OPTIONS.class);
+        OPTIONS options = methodElement.getAnnotation(OPTIONS.class);
         if (options != null) {
             requestPath = options.value();
             requestMethod = Method.OPTIONS;
@@ -169,7 +170,7 @@ class MethodFactory {
     }
 
     private void parseParameters() {
-        List<? extends VariableElement> variables = executableElement.getParameters();
+        List<? extends VariableElement> variables = methodElement.getParameters();
         for (VariableElement v : variables) {
             String vName = v.getSimpleName().toString();
             Path path = v.getAnnotation(Path.class);
@@ -191,7 +192,7 @@ class MethodFactory {
     }
 
     private void parseReturnType() {
-        TypeName typeName = TypeName.get(executableElement.getReturnType());
+        TypeName typeName = TypeName.get(methodElement.getReturnType());
         if (typeName instanceof ParameterizedTypeName) {
             ParameterizedTypeName ptn = (ParameterizedTypeName) typeName;
             ClassName raw = ptn.rawType;

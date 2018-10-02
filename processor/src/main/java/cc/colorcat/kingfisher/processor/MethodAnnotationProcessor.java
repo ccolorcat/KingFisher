@@ -16,10 +16,13 @@
 
 package cc.colorcat.kingfisher.processor;
 
+import javax.lang.model.element.ExecutableElement;
+
 /**
  * Author: cxx
  * Date: 2018-10-02
  * GitHub: https://github.com/ccolorcat
  */
-public interface AnnotationParser {
+public interface MethodAnnotationProcessor {
+    void process(MethodFactory.Builder builder, ExecutableElement element);
 }
