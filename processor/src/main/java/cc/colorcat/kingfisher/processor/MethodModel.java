@@ -249,21 +249,17 @@ class MethodModel {
         }
 
         MethodModel build() {
-            if (method == null) {
-                throw new IllegalStateException("no request method");
-            }
-            if (returnType == null) {
-                throw new IllegalStateException("no return type.");
-            }
+            Utils.checkNotNull(method, "no request method in " + element);
+            Utils.checkNotNull(returnType, "no return type in " + element);
             if (relativePaths.size() > 0) {
                 if (Utils.isBlank(path)) {
-                    throw new IllegalArgumentException("relative path has been set, but path is empty.");
+                    throw new IllegalArgumentException(element + ", relative path has been set, but path is empty.");
                 }
                 for (int i = 0, size = relativePaths.size(); i < size; ++i) {
                     Pair<String, String> pair = relativePaths.get(i);
                     String rp = '{' + pair.first + '}';
                     if (!path.contains(rp)) {
-                        throw new IllegalArgumentException(path + " not contain" + rp);
+                        throw new IllegalArgumentException(path + " not contain" + rp + " in " + element);
                     }
                 }
             }

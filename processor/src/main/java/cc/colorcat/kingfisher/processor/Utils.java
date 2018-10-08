@@ -79,13 +79,13 @@ final class Utils {
         return (ExecutableElement) element;
     }
 
-    static TypeName assertNoWildType(TypeName typeName, ExecutableElement element) {
+    static TypeName assertNoWildcardType(TypeName typeName, ExecutableElement element) {
         if (typeName instanceof WildcardTypeName) {
             throw new IllegalArgumentException("found wildcard return type in " + element);
         }
         if (typeName instanceof ParameterizedTypeName) {
             for (TypeName name : ((ParameterizedTypeName) typeName).typeArguments) {
-                assertNoWildType(name, element);
+                assertNoWildcardType(name, element);
             }
         }
         return typeName;
@@ -104,7 +104,7 @@ final class Utils {
                 throw new IllegalArgumentException(element + " returns " + typeName + ", it must have one and only one generic type.");
             }
             TypeName name = typeArguments.get(0);
-            assertNoWildType(name, element);
+            assertNoWildcardType(name, element);
             return name;
         } else {
             throw new IllegalArgumentException(element + " returns " + typeName + ", it missing type parameter.");
@@ -118,13 +118,11 @@ final class Utils {
         return value;
     }
 
-    static boolean isNotBlank(String text) {
-        return text != null && text.trim().length() > 0;
-    }
-
     static boolean isBlank(String text) {
         return text == null || text.trim().length() == 0;
     }
 
-    private Utils() {throw new AssertionError("no instance");}
+    private Utils() {
+        throw new AssertionError("no instance");
+    }
 }
