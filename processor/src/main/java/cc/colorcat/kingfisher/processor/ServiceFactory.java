@@ -50,13 +50,14 @@ final class ServiceFactory {
     }
 
     void writeOut(Filer filer) throws IOException {
-        ClassName className = ClassName.get(packageElement.getQualifiedName().toString(), classSimpleName);
+        final String pkgName = packageElement.getQualifiedName().toString();
+        ClassName className = ClassName.get(pkgName, classSimpleName);
         TypeSpec service = TypeSpec.classBuilder(className)
                 .addSuperinterface(TypeName.get(interfaceElement.asType()))
                 .addModifiers(Modifier.PUBLIC)
                 .addMethods(methods)
                 .build();
-        JavaFile.builder(packageElement.getQualifiedName().toString(), service).build().writeTo(filer);
+        JavaFile.builder(pkgName, service).build().writeTo(filer);
     }
 
 
