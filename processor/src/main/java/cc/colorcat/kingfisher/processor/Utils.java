@@ -16,15 +16,24 @@
 
 package cc.colorcat.kingfisher.processor;
 
-import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
+import com.squareup.javapoet.WildcardTypeName;
 
+import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.processing.Filer;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+
+import cc.colorcat.kingfisher.core.Call;
 
 /**
  * Author: cxx
@@ -32,28 +41,73 @@ import javax.lang.model.element.TypeElement;
  * GitHub: https://github.com/ccolorcat
  */
 final class Utils {
-
-    static List<MethodSpec> map(List<? extends MethodFactory> factories) {
-        final int size = factories.size();
-        List<MethodSpec> methodSpecs = new ArrayList<>(size);
-        for (int i = 0; i < size; ++i) {
-            methodSpecs.add(factories.get(i).generateMethodSpec());
+    static void writeToJava(ServiceFactory factory, Filer filer) {
+        try {
+            factory.writeOut(filer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return methodSpecs;
     }
 
-    static List<MethodFactory> map(TypeElement interfaceElement, List<? extends ExecutableElement> elements) {
-        final int size = elements.size();
-        List<MethodFactory> factories = new ArrayList<>(size);
-        for (int i = 0; i < size; ++i) {
-            factories.add(new MethodFactory(interfaceElement, elements.get(i)));
+    @SuppressWarnings("unchecked")
+    static List<Annotation> getAllAnnotations(Element element) {
+        List<? extends AnnotationMirror> mirrors = element.getAnnotationMirrors();
+        List<Annotation> annotations = new ArrayList<>(mirrors.size());
+        try {
+            for (AnnotationMirror mirror : mirrors) {
+                Class<Annotation> clazz = (Class<Annotation>) Class.forName(mirror.getAnnotationType().toString());
+                Annotation annotation = element.getAnnotation(clazz);
+                annotations.add(annotation);
+            }
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
-        return factories;
+        return annotations;
     }
 
-    static void assertInterface(Element element) {
+    static TypeElement assertInterface(Element element) {
         if (element.getKind() != ElementKind.INTERFACE) {
-            throw new IllegalArgumentException(element.toString() + "is not interface");
+            throw new RuntimeException(element + " is not interface.");
+        }
+        return (TypeElement) element;
+    }
+
+    static ExecutableElement assertMethod(Element element) {
+        if (element.getKind() != ElementKind.METHOD) {
+            throw new RuntimeException(element + " is not method.");
+        }
+        return (ExecutableElement) element;
+    }
+
+    static TypeName assertNoWildType(TypeName typeName, ExecutableElement element) {
+        if (typeName instanceof WildcardTypeName) {
+            throw new IllegalArgumentException("found wildcard return type in " + element);
+        }
+        if (typeName instanceof ParameterizedTypeName) {
+            for (TypeName name : ((ParameterizedTypeName) typeName).typeArguments) {
+                assertNoWildType(name, element);
+            }
+        }
+        return typeName;
+    }
+
+    static TypeName getReturnTypeName(ExecutableElement element) {
+        TypeName typeName = TypeName.get(element.getReturnType());
+        if (typeName instanceof ParameterizedTypeName) {
+            ParameterizedTypeName ptn = (ParameterizedTypeName) typeName;
+            ClassName raw = ptn.rawType;
+            if (ClassName.get(Call.class).compareTo(raw) != 0) {
+                throw new IllegalArgumentException(element + " returns " + typeName + ", it must be " + Call.class.getCanonicalName());
+            }
+            List<TypeName> typeArguments = ptn.typeArguments;
+            if (typeArguments.size() != 1) {
+                throw new IllegalArgumentException(element + " returns " + typeName + ", it must have one and only one generic type.");
+            }
+            TypeName name = typeArguments.get(0);
+            assertNoWildType(name, element);
+            return name;
+        } else {
+            throw new IllegalArgumentException(element + " returns " + typeName + ", it missing type parameter.");
         }
     }
 
@@ -66,6 +120,10 @@ final class Utils {
 
     static boolean isNotBlank(String text) {
         return text != null && text.trim().length() > 0;
+    }
+
+    static boolean isBlank(String text) {
+        return text == null || text.trim().length() == 0;
     }
 
     private Utils() {throw new AssertionError("no instance");}

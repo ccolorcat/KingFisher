@@ -16,13 +16,21 @@
 
 package cc.colorcat.kingfisher.processor;
 
-import javax.lang.model.element.ExecutableElement;
+import java.lang.annotation.Annotation;
+
+import javax.lang.model.element.Element;
+
+import cc.colorcat.kingfisher.annotation.Url;
 
 /**
  * Author: cxx
- * Date: 2018-10-02
+ * Date: 2018-10-08
  * GitHub: https://github.com/ccolorcat
  */
-public interface MethodAnnotationProcessor {
-    void process(MethodFactory.Builder builder, ExecutableElement element);
+public class UrlProcessor implements AnnotationProcessor {
+    @Override
+    public void process(MethodModel.Builder builder, Element element, Annotation annotation) {
+        Url url = (Url) annotation;
+        builder.url(url.value());
+    }
 }

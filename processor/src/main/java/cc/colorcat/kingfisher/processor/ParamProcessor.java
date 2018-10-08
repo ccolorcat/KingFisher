@@ -14,30 +14,23 @@
  * limitations under the License.
  */
 
-package cc.colorcat.kingfisher.sample;
+package cc.colorcat.kingfisher.processor;
 
-import java.util.Map;
+import java.lang.annotation.Annotation;
 
-import cc.colorcat.kingfisher.annotation.Api;
-import cc.colorcat.kingfisher.annotation.GET;
+import javax.lang.model.element.Element;
+
 import cc.colorcat.kingfisher.annotation.Param;
-import cc.colorcat.kingfisher.annotation.ParamMap;
-import cc.colorcat.kingfisher.annotation.Path;
-import cc.colorcat.kingfisher.annotation.Url;
-import cc.colorcat.kingfisher.core.Call;
 
 /**
  * Author: cxx
- * Date: 2018-09-29
+ * Date: 2018-10-08
  * GitHub: https://github.com/ccolorcat
  */
-@Api
-public interface GithubApi {
-    @Url("https://api.github.com/")
-    @GET("users/{user}/repos/")
-    Call<String> listRepos(@Path("user") String user, @ParamMap Map<String, String> params);
-
-    @Url("http://www.imooc.com/")
-    @GET("api/teacher")
-    Call<String> listCourses(@Param("type") int type, @Param("num") int num);
+public class ParamProcessor implements AnnotationProcessor {
+    @Override
+    public void process(MethodModel.Builder builder, Element element, Annotation annotation) {
+        Param param = (Param) annotation;
+        builder.addParameter(new Pair<>(param.value(), element.getSimpleName().toString()));
+    }
 }

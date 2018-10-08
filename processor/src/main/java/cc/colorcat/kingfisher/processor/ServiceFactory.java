@@ -18,6 +18,7 @@ package cc.colorcat.kingfisher.processor;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
@@ -26,12 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.processing.Filer;
-import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
-
-import cc.colorcat.netbird.Method;
 
 /**
  * Author: cxx
@@ -42,29 +40,23 @@ final class ServiceFactory {
     private final PackageElement packageElement;
     private final TypeElement interfaceElement;
     private final String classSimpleName;
-    private final List<? extends MethodFactory> methodFactories;
+    private final List<MethodSpec> methods;
 
     private ServiceFactory(Builder builder) {
         this.packageElement = builder.packageElement;
         this.interfaceElement = builder.interfaceElement;
         this.classSimpleName = builder.classSimpleName;
-        this.methodFactories = builder.methodFactories;
+        this.methods = builder.methods;
     }
 
-    void writeOut(Filer filer) {
+    void writeOut(Filer filer) throws IOException {
         ClassName className = ClassName.get(packageElement.getQualifiedName().toString(), classSimpleName);
         TypeSpec service = TypeSpec.classBuilder(className)
                 .addSuperinterface(TypeName.get(interfaceElement.asType()))
                 .addModifiers(Modifier.PUBLIC)
-                .addMethods(Utils.map(methodFactories))
+                .addMethods(methods)
                 .build();
-        JavaFile file = JavaFile.builder(packageElement.getQualifiedName().toString(), service)
-                .build();
-        try {
-            file.writeTo(filer);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        JavaFile.builder(packageElement.getQualifiedName().toString(), service).build().writeTo(filer);
     }
 
 
@@ -72,8 +64,7 @@ final class ServiceFactory {
         private PackageElement packageElement;
         private TypeElement interfaceElement;
         private String classSimpleName;
-        private List<ExecutableElement> executableElements = new ArrayList<>();
-        private List<MethodFactory> methodFactories;
+        private List<MethodSpec> methods = new ArrayList<>();
 
         Builder setPackageElement(PackageElement packageElement) {
             this.packageElement = packageElement;
@@ -85,8 +76,8 @@ final class ServiceFactory {
             return this;
         }
 
-        Builder addExecutableElement(ExecutableElement executableElement) {
-            this.executableElements.add(executableElement);
+        Builder addMethodModel(MethodModel model) {
+            methods.add(model.generateCode());
             return this;
         }
 
@@ -94,7 +85,6 @@ final class ServiceFactory {
             Utils.checkNotNull(packageElement, "packageElement is null");
             Utils.checkNotNull(interfaceElement, "interfaceElement is null");
             classSimpleName = interfaceElement.getSimpleName() + "Service";
-            methodFactories = Utils.map(interfaceElement, executableElements);
             return new ServiceFactory(this);
         }
     }

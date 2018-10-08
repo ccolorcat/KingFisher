@@ -16,6 +16,7 @@
 
 package cc.colorcat.kingfisher.processor;
 
+import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 
@@ -36,56 +37,163 @@ import cc.colorcat.netbird.Method;
  * GitHub: https://github.com/ccolorcat
  */
 class MethodModel {
-    private static final String NAME_TYPE = "dataType";
-    private static final String NAME_CALL = "call";
+    private static final String TYPE = "dataType";
+    private static final String CALL = "call";
+    private static final String PATH = "path";
 
-    private final ExecutableElement methodElement;
+    private final ExecutableElement element;
     private final String url;
     private final String path;
     private final Method method;
     private final List<Pair<String, String>> relativePaths;
     private final List<Pair<String, String>> parameters;
+    private final String paramMapName;
     private final List<Pair<String, String>> headers;
+    private final String headerMapName;
     private final TypeName returnType;
 
     private MethodModel(Builder builder) {
-        this.methodElement = builder.methodElement;
+        this.element = builder.element;
         this.url = builder.url;
         this.path = builder.path;
         this.method = builder.method;
         this.relativePaths = builder.relativePaths;
         this.parameters = builder.parameters;
+        this.paramMapName = builder.paramMapName;
         this.headers = builder.headers;
+        this.headerMapName = builder.headerMapName;
         this.returnType = builder.returnType;
     }
 
     MethodSpec generateCode() {
-        MethodSpec.Builder builder = MethodSpec.overriding(methodElement)
-                .addStatement("$T $N = new $T<$T>() {}.generateType()", Type.class, NAME_TYPE, TypeToken.class, returnType)
-                .addStatement("$T<$T> $N = $T.call($N)", BaseCall.class, returnType, NAME_CALL, KingFisher.class, NAME_TYPE);
-        if (Utils.isNotBlank(url)) {
-            builder.addStatement("$N.url($S)", NAME_CALL, url);
-        }
+        MethodSpec.Builder builder = MethodSpec.overriding(element);
+        processCall(builder);
+        processUrl(builder);
+        processPath(builder);
+        processMethod(builder);
+        processParameters(builder);
+        processHeaders(builder);
+        processReturn(builder);
         return builder.build();
     }
 
+    private void processCall(MethodSpec.Builder builder) {
+        builder.addStatement("$T $N = new $T<$T>() {}.generateType()", Type.class, TYPE, TypeToken.class, returnType)
+                .addStatement("$T<$T> $N = $T.newCall($N)", BaseCall.class, returnType, CALL, KingFisher.class, TYPE);
+    }
+
+    private void processUrl(MethodSpec.Builder builder) {
+        if (!Utils.isBlank(url)) builder.addStatement("$N.url($S)", CALL, url);
+    }
+
+    private void processPath(MethodSpec.Builder builder) {
+        if (Utils.isBlank(path)) return;
+
+        final int size = relativePaths.size();
+        if (size == 0) {
+            builder.addStatement("$N.path($S)", CALL, path);
+            return;
+        }
+
+        Pair<String, String> p = relativePaths.get(0);
+        if (size == 1) {
+            builder.addStatement("$N.path($S.replace(\"{$N}\", $N))", CALL, path, p.first, p.second);
+            return;
+        }
+        CodeBlock.Builder pb = CodeBlock.of("$T $N = $S.replace(\"{$N}\", $N)", String.class, PATH, path, p.first, p.second).toBuilder();
+        for (int i = 1; i < size; ++i) {
+            p = relativePaths.get(i);
+            pb.add(".replace(\"{$N}\", $N)", p.first, p.second);
+        }
+        builder.addStatement(pb.build());
+    }
+
+    private void processMethod(MethodSpec.Builder builder) {
+        builder.addStatement("$N.method($T.$N)", CALL, Method.class, method.name());
+    }
+
+    private void processParameters(MethodSpec.Builder builder) {
+        for (int i = 0, size = parameters.size(); i < size; ++i) {
+            Pair<String, String> param = parameters.get(i);
+            builder.addStatement("$N.parameter($S, $T.valueOf($N))", CALL, param.first, String.class, param.second);
+        }
+        if (!Utils.isBlank(paramMapName)) {
+            builder.addStatement("$N.parameters($N)", CALL, paramMapName);
+        }
+    }
+
+    private void processHeaders(MethodSpec.Builder builder) {
+        for (int i = 0, size = headers.size(); i < size; ++i) {
+            Pair<String, String> header = headers.get(i);
+            builder.addStatement("$N.header($S, $T.valueOf($N))", CALL, header.first, String.class, header.second);
+        }
+        if (!Utils.isBlank(headerMapName)) {
+            builder.addStatement("$N.headers($N)", CALL, headerMapName);
+        }
+    }
+
+    private void processReturn(MethodSpec.Builder builder) {
+        builder.addStatement("return $N", CALL);
+    }
+
     static class Builder {
-        private ExecutableElement methodElement;
+        private ExecutableElement element; // method
+        /**
+         * @see cc.colorcat.kingfisher.annotation.Url
+         */
         private String url;
+        /**
+         * @see cc.colorcat.kingfisher.annotation.GET
+         * @see cc.colorcat.kingfisher.annotation.HEAD
+         * @see cc.colorcat.kingfisher.annotation.TRACE
+         * @see cc.colorcat.kingfisher.annotation.OPTIONS
+         * @see cc.colorcat.kingfisher.annotation.POST
+         * @see cc.colorcat.kingfisher.annotation.PUT
+         * @see cc.colorcat.kingfisher.annotation.DELETE
+         */
         private String path;
+        /**
+         * @see cc.colorcat.kingfisher.annotation.GET
+         * @see cc.colorcat.kingfisher.annotation.HEAD
+         * @see cc.colorcat.kingfisher.annotation.TRACE
+         * @see cc.colorcat.kingfisher.annotation.OPTIONS
+         * @see cc.colorcat.kingfisher.annotation.POST
+         * @see cc.colorcat.kingfisher.annotation.PUT
+         * @see cc.colorcat.kingfisher.annotation.DELETE
+         */
         private Method method;
+        /**
+         * @see cc.colorcat.kingfisher.annotation.Path
+         */
         private List<Pair<String, String>> relativePaths = new ArrayList<>(1);
+        /**
+         * @see cc.colorcat.kingfisher.annotation.Param
+         */
         private List<Pair<String, String>> parameters = new ArrayList<>(4);
+        /**
+         * Map<String, String>, name of arg
+         *
+         * @see cc.colorcat.kingfisher.annotation.ParamMap
+         */
         private String paramMapName;
+        /**
+         * @see cc.colorcat.kingfisher.annotation.Header
+         */
         private List<Pair<String, String>> headers = new ArrayList<>(1);
+        /**
+         * Map<String, String>, name of arg
+         *
+         * @see cc.colorcat.kingfisher.annotation.HeaderMap
+         */
         private String headerMapName;
         private TypeName returnType;
 
-        Builder() {
+        Builder(ExecutableElement element) {
+            this.element = element;
         }
 
-        Builder method(ExecutableElement methodElement) {
-            this.methodElement = methodElement;
+        Builder element(ExecutableElement methodElement) {
+            this.element = methodElement;
             return this;
         }
 
@@ -115,6 +223,9 @@ class MethodModel {
         }
 
         Builder parameterMap(String name) {
+            if (this.paramMapName != null) {
+                throw new IllegalArgumentException("more than one ParamMap");
+            }
             this.paramMapName = name;
             return this;
         }
@@ -125,6 +236,9 @@ class MethodModel {
         }
 
         Builder headerMap(String name) {
+            if (this.headerMapName != null) {
+                throw new IllegalArgumentException("more than one HeaderMap");
+            }
             this.headerMapName = name;
             return this;
         }
@@ -132,6 +246,28 @@ class MethodModel {
         Builder returnType(TypeName typeName) {
             this.returnType = typeName;
             return this;
+        }
+
+        MethodModel build() {
+            if (method == null) {
+                throw new IllegalStateException("no request method");
+            }
+            if (returnType == null) {
+                throw new IllegalStateException("no return type.");
+            }
+            if (relativePaths.size() > 0) {
+                if (Utils.isBlank(path)) {
+                    throw new IllegalArgumentException("relative path has been set, but path is empty.");
+                }
+                for (int i = 0, size = relativePaths.size(); i < size; ++i) {
+                    Pair<String, String> pair = relativePaths.get(i);
+                    String rp = '{' + pair.first + '}';
+                    if (!path.contains(rp)) {
+                        throw new IllegalArgumentException(path + " not contain" + rp);
+                    }
+                }
+            }
+            return new MethodModel(this);
         }
     }
 }

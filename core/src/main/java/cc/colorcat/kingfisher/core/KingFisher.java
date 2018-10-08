@@ -31,8 +31,8 @@ import cc.colorcat.netbird.Parser;
 public class KingFisher {
     private static KingFisher instance = new KingFisher();
 
-    public static <T> BaseCall<T> call(Type typeOfT) {
-        return instance.newCall(typeOfT);
+    public static <T> BaseCall<T> newCall(Type typeOfT) {
+        return instance.createCall(typeOfT);
     }
 
     private NetBird netBird = new NetBird.Builder("https://www.baidu.com/").build();
@@ -43,7 +43,7 @@ public class KingFisher {
         parserFactories.add(new StringParserFactory());
     }
 
-    private <T> BaseCall<T> newCall(Type typeOfT) {
+    private <T> BaseCall<T> createCall(Type typeOfT) {
         Parser<? extends T> parser = newParser(typeOfT);
         return new BaseCall<>(netBird, parser);
     }
