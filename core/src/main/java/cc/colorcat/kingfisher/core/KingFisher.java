@@ -58,4 +58,9 @@ public class KingFisher {
         }
         throw new UnsupportedOperationException("no parser supported");
     }
+
+    public static class Builder {
+        private NetBird netBird;
+        private List<ParserFactory> factories = new ArrayList<>(8);
+    }
 }

@@ -29,9 +29,9 @@ import cc.colorcat.kingfisher.core.Call;
  * GitHub: https://github.com/ccolorcat
  */
 @Api
-public interface GithubApi {
+public interface TestApi {
     @Url("https://api.github.com/")
-    @GET("users/{user}/repos/")
+    @GET("users/{user}/repos")
     Call<String> listRepos(@Path("user") String user);
 
     @Url("http://www.imooc.com/")
