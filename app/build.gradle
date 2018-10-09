@@ -51,7 +51,10 @@ dependencies {
     testImplementation rootProject.ext.junit
 
     implementation rootProject.ext.netBird
+    implementation rootProject.ext.gson
+    implementation 'com.github.ccolorcat.NetBird:netbird-logging-support:v4.3.4'
     annotationProcessor project(':processor')
     implementation project(':annotation')
     implementation project(':core')
+    implementation project(':gson_parser_factory')
 }

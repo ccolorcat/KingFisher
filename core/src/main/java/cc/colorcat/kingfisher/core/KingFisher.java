@@ -88,7 +88,9 @@ public class KingFisher {
             if (netBird == null) {
                 netBird = new NetBird.Builder(Utils.checkedUrl(baseUrl)).build();
             }
-            factories.add(new StringParserFactory());
+            if (factories.isEmpty()) {
+                throw new IllegalStateException("no ParserFactory");
+            }
             KingFisher.instance = new KingFisher(this);
         }
     }

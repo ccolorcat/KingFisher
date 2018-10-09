@@ -14,29 +14,29 @@
  * limitations under the License.
  */
 
-package cc.colorcat.kingfisher.sample;
+package cc.colorcat.kingfisher.parser.gson;
 
-import java.util.List;
+import com.google.gson.Gson;
 
-import cc.colorcat.kingfisher.annotation.Api;
-import cc.colorcat.kingfisher.annotation.GET;
-import cc.colorcat.kingfisher.annotation.Param;
-import cc.colorcat.kingfisher.annotation.Path;
-import cc.colorcat.kingfisher.annotation.Url;
-import cc.colorcat.kingfisher.core.Call;
+import java.lang.reflect.Type;
+
+import cc.colorcat.kingfisher.core.ParserFactory;
+import cc.colorcat.netbird.Parser;
 
 /**
  * Author: cxx
- * Date: 2018-09-29
+ * Date: 2018-10-09
  * GitHub: https://github.com/ccolorcat
  */
-@Api
-public interface TestApi {
-    @Url("https://api.github.com/")
-    @GET("users/{user}/repos")
-    Call<String> listRepos(@Path("user") String user);
+public final class GsonParserFactory implements ParserFactory {
+    private final Gson gson;
 
-    @Url("http://www.imooc.com/")
-    @GET("api/teacher")
-    Call<List<Course>> listCourses(@Param("type") int type, @Param("num") int num);
+    public GsonParserFactory(Gson gson) {
+        this.gson = gson;
+    }
+
+    @Override
+    public Parser<?> newParser(Type typeOfT) {
+        return new GsonParser<>(gson, typeOfT);
+    }
 }

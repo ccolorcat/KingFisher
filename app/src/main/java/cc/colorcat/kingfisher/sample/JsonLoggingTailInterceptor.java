@@ -16,27 +16,23 @@
 
 package cc.colorcat.kingfisher.sample;
 
-import java.util.List;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
 
-import cc.colorcat.kingfisher.annotation.Api;
-import cc.colorcat.kingfisher.annotation.GET;
-import cc.colorcat.kingfisher.annotation.Param;
-import cc.colorcat.kingfisher.annotation.Path;
-import cc.colorcat.kingfisher.annotation.Url;
-import cc.colorcat.kingfisher.core.Call;
+import cc.colorcat.netbird.logging.LoggingTailInterceptor;
 
 /**
  * Author: cxx
- * Date: 2018-09-29
+ * Date: 2018-10-09
  * GitHub: https://github.com/ccolorcat
  */
-@Api
-public interface TestApi {
-    @Url("https://api.github.com/")
-    @GET("users/{user}/repos")
-    Call<String> listRepos(@Path("user") String user);
+public class JsonLoggingTailInterceptor extends LoggingTailInterceptor {
+    private Gson mGson = new GsonBuilder().setPrettyPrinting().create();
+    private JsonParser mParser = new JsonParser();
 
-    @Url("http://www.imooc.com/")
-    @GET("api/teacher")
-    Call<List<Course>> listCourses(@Param("type") int type, @Param("num") int num);
+    @Override
+    protected String formatResponse(String content, String contentType) {
+        return '\n' + mGson.toJson(mParser.parse(content));
+    }
 }
