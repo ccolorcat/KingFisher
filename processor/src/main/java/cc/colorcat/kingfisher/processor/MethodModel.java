@@ -254,7 +254,7 @@ class MethodModel {
                 Pair<String, String> pair = relativePaths.get(i);
                 String rp = '{' + pair.first + '}';
                 if (!path.contains(rp)) {
-                    throw new IllegalArgumentException(element + ", no contain " + rp + " in " + path);
+                    throw new IllegalArgumentException(element + ", this is no " + rp + " in " + path);
                 }
             }
             return new MethodModel(this);
