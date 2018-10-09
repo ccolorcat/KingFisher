@@ -59,4 +59,6 @@ project.ext {
     javapoet = 'com.squareup:javapoet:1.11.1'
     autoService = 'com.google.auto.service:auto-service:1.0-rc4'
     gson = 'com.google.code.gson:gson:2.8.5'
+    jackson = 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
+    fastJson = 'com.alibaba:fastjson:1.1.70.android'
 }

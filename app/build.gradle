@@ -49,9 +49,10 @@ dependencies {
     androidTestImplementation rootProject.ext.testRunner
     androidTestImplementation rootProject.ext.testEspresso
     testImplementation rootProject.ext.junit
-
     implementation rootProject.ext.netBird
     implementation rootProject.ext.gson
+    implementation rootProject.ext.jackson
+    implementation rootProject.ext.fastJson
     implementation 'com.github.ccolorcat.NetBird:netbird-logging-support:v4.3.4'
     annotationProcessor project(':processor')
     implementation project(':annotation')
