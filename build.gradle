@@ -8,6 +8,8 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.0'
+        // jitPack
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -24,4 +26,36 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+project.ext {
+    androidJavaSource = JavaVersion.VERSION_1_7
+    androidJavaTarget = JavaVersion.VERSION_1_7
+
+    javaSource = "1.7"
+    javaTarget = "1.7"
+
+    jitPackGroup = 'com.github.ccolorcat'
+
+    def sdkVersion = 28
+    def supportVersion = "28.0.0"
+
+    // android
+    compileSdkVersion = sdkVersion
+
+    // android.defaultConfig
+    minSdkVersion = 15
+    targetSdkVersion = sdkVersion
+    versionCode = 1
+    versionName = "1.0.0"
+
+    // dependencies
+    supportAppcompat = "com.android.support:appcompat-v7:${supportVersion}"
+    testRunner = "com.android.support.test:runner:1.0.2"
+    testEspresso = 'com.android.support.test.espresso:espresso-core:3.0.2'
+    junit = 'junit:junit:4.12'
+
+    netBird = 'com.github.ccolorcat.NetBird:netbird:v4.3.4'
+    javapoet = 'com.squareup:javapoet:1.11.1'
+    autoService = 'com.google.auto.service:auto-service:1.0-rc4'
 }

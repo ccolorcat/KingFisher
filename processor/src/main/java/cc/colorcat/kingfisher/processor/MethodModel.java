@@ -29,7 +29,6 @@ import javax.lang.model.element.ExecutableElement;
 import cc.colorcat.kingfisher.core.BaseCall;
 import cc.colorcat.kingfisher.core.KingFisher;
 import cc.colorcat.kingfisher.core.TypeToken;
-import cc.colorcat.netbird.Method;
 
 /**
  * Author: cxx
@@ -44,7 +43,7 @@ class MethodModel {
     private final ExecutableElement element;
     private final String url;
     private final String path;
-    private final Method method;
+    private final String method;
     private final List<Pair<String, String>> relativePaths;
     private final List<Pair<String, String>> parameters;
     private final String paramMapName;
@@ -109,7 +108,7 @@ class MethodModel {
     }
 
     private void processMethod(MethodSpec.Builder builder) {
-        builder.addStatement("$N.method($T.$N)", CALL, Method.class, method.name());
+        builder.addStatement("$N.method($S)", CALL, method);
     }
 
     private void processParameters(MethodSpec.Builder builder) {
@@ -161,7 +160,7 @@ class MethodModel {
          * @see cc.colorcat.kingfisher.annotation.PUT
          * @see cc.colorcat.kingfisher.annotation.DELETE
          */
-        private Method method;
+        private String method;
         /**
          * @see cc.colorcat.kingfisher.annotation.Path
          */
@@ -207,7 +206,7 @@ class MethodModel {
             return this;
         }
 
-        Builder method(Method method) {
+        Builder method(String method) {
             this.method = method;
             return this;
         }

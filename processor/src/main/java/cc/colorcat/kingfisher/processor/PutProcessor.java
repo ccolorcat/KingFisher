@@ -21,7 +21,6 @@ import java.lang.annotation.Annotation;
 import javax.lang.model.element.Element;
 
 import cc.colorcat.kingfisher.annotation.PUT;
-import cc.colorcat.netbird.Method;
 
 /**
  * Author: cxx
@@ -32,6 +31,6 @@ public class PutProcessor implements AnnotationProcessor {
     @Override
     public void process(MethodModel.Builder builder, Element element, Annotation annotation) {
         PUT put = (PUT) annotation;
-        builder.path(put.value()).method(Method.PUT);
+        builder.path(put.value()).method("PUT");
     }
 }

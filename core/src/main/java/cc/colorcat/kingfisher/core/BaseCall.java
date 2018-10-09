@@ -51,6 +51,10 @@ public final class BaseCall<T> implements Call<T> {
         this.builder.method(method);
     }
 
+    public void method(String method) {
+        this.builder.method(Method.valueOf(method));
+    }
+
     public void parameter(String name, String value) {
         builder.add(name, value);
     }

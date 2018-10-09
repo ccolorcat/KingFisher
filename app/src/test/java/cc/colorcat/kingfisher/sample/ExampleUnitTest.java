@@ -23,7 +23,7 @@ public class ExampleUnitTest {
     public void testKingFisher() throws IOException {
         new KingFisher.Builder().baseUrl("https://www.baidu.com/").initialize();
         TestApi api = new TestApiService();
-//        System.out.println(api.listRepos("ccolorcat").execute());
+        System.out.println(api.listRepos("ccolorcat").execute());
         System.out.println(api.listCourses(4, 30).execute());
     }
 }

@@ -21,7 +21,6 @@ import java.lang.annotation.Annotation;
 import javax.lang.model.element.Element;
 
 import cc.colorcat.kingfisher.annotation.TRACE;
-import cc.colorcat.netbird.Method;
 
 /**
  * Author: cxx
@@ -32,6 +31,6 @@ public class TraceProcessor implements AnnotationProcessor {
     @Override
     public void process(MethodModel.Builder builder, Element element, Annotation annotation) {
         TRACE trace = (TRACE) annotation;
-        builder.path(trace.value()).method(Method.TRACE);
+        builder.path(trace.value()).method("TRACE");
     }
 }

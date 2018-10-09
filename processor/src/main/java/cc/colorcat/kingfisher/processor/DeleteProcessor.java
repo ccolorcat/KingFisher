@@ -21,7 +21,6 @@ import java.lang.annotation.Annotation;
 import javax.lang.model.element.Element;
 
 import cc.colorcat.kingfisher.annotation.DELETE;
-import cc.colorcat.netbird.Method;
 
 /**
  * Author: cxx
@@ -32,6 +31,6 @@ public class DeleteProcessor implements AnnotationProcessor {
     @Override
     public void process(MethodModel.Builder builder, Element element, Annotation annotation) {
         DELETE delete = (DELETE) annotation;
-        builder.path(delete.value()).method(Method.DELETE);
+        builder.path(delete.value()).method("DELETE");
     }
 }

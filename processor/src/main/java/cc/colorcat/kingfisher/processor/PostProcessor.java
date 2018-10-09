@@ -21,7 +21,6 @@ import java.lang.annotation.Annotation;
 import javax.lang.model.element.Element;
 
 import cc.colorcat.kingfisher.annotation.POST;
-import cc.colorcat.netbird.Method;
 
 /**
  * Author: cxx
@@ -32,6 +31,6 @@ class PostProcessor implements AnnotationProcessor {
     @Override
     public void process(MethodModel.Builder builder, Element element, Annotation annotation) {
         POST post = (POST) annotation;
-        builder.path(post.value()).method(Method.POST);
+        builder.path(post.value()).method("POST");
     }
 }

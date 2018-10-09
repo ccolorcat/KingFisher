@@ -21,7 +21,6 @@ import java.lang.annotation.Annotation;
 import javax.lang.model.element.Element;
 
 import cc.colorcat.kingfisher.annotation.HEAD;
-import cc.colorcat.netbird.Method;
 
 /**
  * Author: cxx
@@ -32,6 +31,6 @@ public class HeadProcessor implements AnnotationProcessor {
     @Override
     public void process(MethodModel.Builder builder, Element element, Annotation annotation) {
         HEAD head = (HEAD) annotation;
-        builder.path(head.value()).method(Method.HEAD);
+        builder.path(head.value()).method("HEAD");
     }
 }

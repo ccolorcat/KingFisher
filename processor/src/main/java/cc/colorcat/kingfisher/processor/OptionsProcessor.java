@@ -21,7 +21,6 @@ import java.lang.annotation.Annotation;
 import javax.lang.model.element.Element;
 
 import cc.colorcat.kingfisher.annotation.OPTIONS;
-import cc.colorcat.netbird.Method;
 
 /**
  * Author: cxx
@@ -32,6 +31,6 @@ public class OptionsProcessor implements AnnotationProcessor {
     @Override
     public void process(MethodModel.Builder builder, Element element, Annotation annotation) {
         OPTIONS options = (OPTIONS) annotation;
-        builder.path(options.value()).method(Method.OPTIONS);
+        builder.path(options.value()).method("OPTIONS");
     }
 }

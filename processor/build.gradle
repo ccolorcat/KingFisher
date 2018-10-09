@@ -15,16 +15,56 @@
  */
 
 apply plugin: 'java-library'
+apply plugin: 'maven'
+
+// jitPack
+group = rootProject.ext.jitPackGroup
+
+repositories {
+    mavenCentral()
+}
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.squareup:javapoet:1.11.1'
-    implementation 'com.google.auto.service:auto-service:1.0-rc4'
-    implementation 'com.github.ccolorcat.NetBird:netbird:v4.3.4'
-//    implementation 'com.github.ccolorcat.NetBird:netbird-gson-parser:v4.3.4'
+    implementation rootProject.ext.javapoet
+    implementation rootProject.ext.autoService
     implementation project(':annotation')
     implementation project(':core')
 }
 
-sourceCompatibility = "7"
-targetCompatibility = "7"
+sourceCompatibility = rootProject.ext.javaSource
+targetCompatibility = rootProject.ext.javaTarget
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+// To specify a license in the pom:
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+        }
+    }
+}
