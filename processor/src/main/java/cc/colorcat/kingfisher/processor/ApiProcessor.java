@@ -66,19 +66,19 @@ public class ApiProcessor extends AbstractProcessor {
     private Messager messager;
 
     {
-        processors.put(DELETE.class, new DeleteProcessor());
         processors.put(GET.class, new GetProcessor());
         processors.put(HEAD.class, new HeadProcessor());
-        processors.put(Header.class, new HeaderProcessor());
-        processors.put(HeaderMap.class, new HeaderMapProcessor());
+        processors.put(TRACE.class, new TraceProcessor());
         processors.put(OPTIONS.class, new OptionsProcessor());
+        processors.put(POST.class, new PostProcessor());
+        processors.put(PUT.class, new PutProcessor());
+        processors.put(DELETE.class, new DeleteProcessor());
         processors.put(Param.class, new ParamProcessor());
         processors.put(ParamMap.class, new ParamMapProcessor());
-        processors.put(Path.class, new PathProcessor());
-        processors.put(POST.class, new PostProcessor());
-        processors.put(TRACE.class, new TraceProcessor());
+        processors.put(Header.class, new HeaderProcessor());
+        processors.put(HeaderMap.class, new HeaderMapProcessor());
         processors.put(Url.class, new UrlProcessor());
-        processors.put(PUT.class, new PutProcessor());
+        processors.put(Path.class, new PathProcessor());
     }
 
     @Override
@@ -101,22 +101,21 @@ public class ApiProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
-        Set<? extends Element> allApi = roundEnvironment.getElementsAnnotatedWith(Api.class);
-        for (Element api : allApi) {
+        for (Element api : roundEnvironment.getElementsAnnotatedWith(Api.class)) {
             ServiceFactory.Builder serviceBuilder = new ServiceFactory.Builder()
                     .setInterfaceElement(Utils.assertInterface(api))
                     .setPackageElement(utils.getPackageOf(api));
 
             for (Element e : api.getEnclosedElements()) {
-                ExecutableElement method = Utils.assertMethod(e);
-                MethodModel.Builder methodBuilder = new MethodModel.Builder(method);
-                processAnnotation(methodBuilder, method);
+                ExecutableElement ee = Utils.assertMethod(e);
+                MethodModel.Builder methodBuilder = new MethodModel.Builder(ee);
+                processAnnotation(methodBuilder, ee);
 
-                for (VariableElement ve : method.getParameters()) {
+                for (VariableElement ve : ee.getParameters()) {
                     processAnnotation(methodBuilder, ve);
                 }
 
-                methodBuilder.returnType(Utils.getActualReturnTypeName(method));
+                methodBuilder.returnType(Utils.getActualReturnTypeName(ee));
                 serviceBuilder.addMethodModel(methodBuilder.build());
             }
             Utils.writeToJava(serviceBuilder.build(), filer);
