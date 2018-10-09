@@ -26,6 +26,7 @@ import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
+import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
@@ -35,6 +36,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.Elements;
+import javax.tools.Diagnostic;
 
 import cc.colorcat.kingfisher.annotation.Api;
 import cc.colorcat.kingfisher.annotation.DELETE;
@@ -61,6 +63,7 @@ public class ApiProcessor extends AbstractProcessor {
     private Map<Class<? extends Annotation>, AnnotationProcessor> processors = new HashMap<>();
     private Filer filer;
     private Elements utils;
+    private Messager messager;
 
     {
         processors.put(DELETE.class, new DeleteProcessor());
@@ -83,6 +86,7 @@ public class ApiProcessor extends AbstractProcessor {
         super.init(processingEnvironment);
         this.filer = processingEnvironment.getFiler();
         this.utils = processingEnvironment.getElementUtils();
+        this.messager = processingEnvironment.getMessager();
     }
 
     @Override
@@ -112,7 +116,7 @@ public class ApiProcessor extends AbstractProcessor {
                     processAnnotation(methodBuilder, ve);
                 }
 
-                methodBuilder.returnType(Utils.getReturnTypeName(method));
+                methodBuilder.returnType(Utils.getActualReturnTypeName(method));
                 serviceBuilder.addMethodModel(methodBuilder.build());
             }
             Utils.writeToJava(serviceBuilder.build(), filer);
@@ -127,6 +131,11 @@ public class ApiProcessor extends AbstractProcessor {
     }
 
     private void process(MethodModel.Builder builder, Element element, Annotation annotation) {
-        processors.get(annotation.annotationType()).process(builder, element, annotation);
+        AnnotationProcessor processor = this.processors.get(annotation.annotationType());
+        if (processor != null) {
+            processor.process(builder, element, annotation);
+        } else {
+            messager.printMessage(Diagnostic.Kind.WARNING, "no annotation processor for " + annotation, element);
+        }
     }
 }

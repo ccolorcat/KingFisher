@@ -28,8 +28,7 @@ import javax.lang.model.element.Element;
 public class HeaderMapProcessor implements AnnotationProcessor {
     @Override
     public void process(MethodModel.Builder builder, Element element, Annotation annotation) {
-//        VariableElement ve = (VariableElement) element;
-//        ve.accept()
+        Utils.assertStringMap(element);
         builder.headerMap(element.getSimpleName().toString());
     }
 }

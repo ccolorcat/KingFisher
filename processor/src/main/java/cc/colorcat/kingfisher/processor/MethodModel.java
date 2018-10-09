@@ -224,7 +224,7 @@ class MethodModel {
 
         Builder parameterMap(String name) {
             if (this.paramMapName != null) {
-                throw new IllegalArgumentException("more than one ParamMap");
+                throw new IllegalArgumentException(element + ", more than one ParamMap");
             }
             this.paramMapName = name;
             return this;
@@ -237,7 +237,7 @@ class MethodModel {
 
         Builder headerMap(String name) {
             if (this.headerMapName != null) {
-                throw new IllegalArgumentException("more than one HeaderMap");
+                throw new IllegalArgumentException(element + ", more than one HeaderMap");
             }
             this.headerMapName = name;
             return this;
@@ -249,18 +249,13 @@ class MethodModel {
         }
 
         MethodModel build() {
-            Utils.checkNotNull(method, "no request method in " + element);
-            Utils.checkNotNull(returnType, "no return type in " + element);
-            if (relativePaths.size() > 0) {
-                if (Utils.isBlank(path)) {
-                    throw new IllegalArgumentException(element + ", relative path has been set, but path is empty.");
-                }
-                for (int i = 0, size = relativePaths.size(); i < size; ++i) {
-                    Pair<String, String> pair = relativePaths.get(i);
-                    String rp = '{' + pair.first + '}';
-                    if (!path.contains(rp)) {
-                        throw new IllegalArgumentException(path + " not contain" + rp + " in " + element);
-                    }
+            Utils.checkNotNull(method, element + ", no request method");
+            Utils.checkNotNull(returnType, element + ", no return type");
+            for (int i = 0, size = relativePaths.size(); i < size; ++i) {
+                Pair<String, String> pair = relativePaths.get(i);
+                String rp = '{' + pair.first + '}';
+                if (!path.contains(rp)) {
+                    throw new IllegalArgumentException(element + ", no contain " + rp + " in " + path);
                 }
             }
             return new MethodModel(this);

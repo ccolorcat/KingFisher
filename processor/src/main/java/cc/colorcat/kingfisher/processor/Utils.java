@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.AnnotationMirror;
@@ -41,6 +42,20 @@ import cc.colorcat.kingfisher.core.Call;
  * GitHub: https://github.com/ccolorcat
  */
 final class Utils {
+    private static final String TYPE = String.format(
+            "%s<%s,%s>",
+            Map.class.getCanonicalName(),
+            String.class.getCanonicalName(),
+            String.class.getCanonicalName()
+    );
+
+    static void assertStringMap(Element element) {
+        String type = element.asType().toString();
+        if (!TYPE.equals(type)) {
+            throw new IllegalArgumentException(element + ", must be " + TYPE + " but is " + type);
+        }
+    }
+
     static void writeToJava(ServiceFactory factory, Filer filer) {
         try {
             factory.writeOut(filer);
@@ -67,55 +82,51 @@ final class Utils {
 
     static TypeElement assertInterface(Element element) {
         if (element.getKind() != ElementKind.INTERFACE) {
-            throw new RuntimeException(element + " is not interface.");
+            throw new RuntimeException(element + " is not interface");
         }
         return (TypeElement) element;
     }
 
     static ExecutableElement assertMethod(Element element) {
         if (element.getKind() != ElementKind.METHOD) {
-            throw new RuntimeException(element + " is not method.");
+            throw new RuntimeException(element + " is not method");
         }
         return (ExecutableElement) element;
     }
 
-    static TypeName assertNoWildcardType(TypeName typeName, ExecutableElement element) {
+    static TypeName getActualReturnTypeName(ExecutableElement element) {
+        TypeName typeName = TypeName.get(element.getReturnType());
+        if (typeName instanceof ParameterizedTypeName) {
+            ParameterizedTypeName ptn = (ParameterizedTypeName) typeName;
+            if (ClassName.get(Call.class).compareTo(ptn.rawType) != 0) {
+                throw new IllegalArgumentException(element + ", returns " + typeName + ", it must be " + Call.class.getCanonicalName());
+            }
+            List<TypeName> typeArguments = ptn.typeArguments;
+            if (typeArguments.size() != 1) {
+                throw new IllegalArgumentException(element + ", returns " + typeName + ", it must have one and only one generic type");
+            }
+            TypeName actualTypeName = typeArguments.get(0);
+            assertNoWildcardType(actualTypeName, element);
+            return actualTypeName;
+        }
+        throw new IllegalArgumentException(element + ", returns " + typeName + ", it missing type parameter");
+    }
+
+    private static void assertNoWildcardType(TypeName typeName, ExecutableElement element) {
         if (typeName instanceof WildcardTypeName) {
-            throw new IllegalArgumentException("found wildcard return type in " + element);
+            throw new IllegalArgumentException(element + ", found wildcard");
         }
         if (typeName instanceof ParameterizedTypeName) {
             for (TypeName name : ((ParameterizedTypeName) typeName).typeArguments) {
                 assertNoWildcardType(name, element);
             }
         }
-        return typeName;
     }
 
-    static TypeName getReturnTypeName(ExecutableElement element) {
-        TypeName typeName = TypeName.get(element.getReturnType());
-        if (typeName instanceof ParameterizedTypeName) {
-            ParameterizedTypeName ptn = (ParameterizedTypeName) typeName;
-            ClassName raw = ptn.rawType;
-            if (ClassName.get(Call.class).compareTo(raw) != 0) {
-                throw new IllegalArgumentException(element + " returns " + typeName + ", it must be " + Call.class.getCanonicalName());
-            }
-            List<TypeName> typeArguments = ptn.typeArguments;
-            if (typeArguments.size() != 1) {
-                throw new IllegalArgumentException(element + " returns " + typeName + ", it must have one and only one generic type.");
-            }
-            TypeName name = typeArguments.get(0);
-            assertNoWildcardType(name, element);
-            return name;
-        } else {
-            throw new IllegalArgumentException(element + " returns " + typeName + ", it missing type parameter.");
-        }
-    }
-
-    static <T> T checkNotNull(T value, String msg) {
+    static <T> void checkNotNull(T value, String msg) {
         if (value == null) {
             throw new NullPointerException(msg);
         }
-        return value;
     }
 
     static boolean isBlank(String text) {

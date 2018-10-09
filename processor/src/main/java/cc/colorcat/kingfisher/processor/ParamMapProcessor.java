@@ -28,6 +28,7 @@ import javax.lang.model.element.Element;
 public class ParamMapProcessor implements AnnotationProcessor {
     @Override
     public void process(MethodModel.Builder builder, Element element, Annotation annotation) {
+        Utils.assertStringMap(element);
         builder.parameterMap(element.getSimpleName().toString());
     }
 }
