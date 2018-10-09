@@ -19,25 +19,11 @@ package cc.colorcat.kingfisher.sample;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import java.lang.reflect.Type;
-import java.util.List;
-
-import cc.colorcat.kingfisher.core.Call;
-import cc.colorcat.kingfisher.core.KingFisher;
-
 public class MainActivity extends AppCompatActivity {
-    KingFisher fisher = new KingFisher();
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
     }
-
-//    private Call<List<String>> newCall(Type typeOfT) {
-//        return fisher.<List<String>>newCall(typeOfT)
-//                .addParameter("name", "value");
-//    }
 }

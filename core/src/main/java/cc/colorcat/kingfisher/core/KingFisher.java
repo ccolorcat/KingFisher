@@ -29,18 +29,21 @@ import cc.colorcat.netbird.Parser;
  * GitHub: https://github.com/ccolorcat
  */
 public class KingFisher {
-    private static KingFisher instance = new KingFisher();
+    private static KingFisher instance;
 
     public static <T> BaseCall<T> newCall(Type typeOfT) {
+        if (instance == null) {
+            throw new IllegalStateException("KingFisher uninitialized");
+        }
         return instance.createCall(typeOfT);
     }
 
-    private NetBird netBird = new NetBird.Builder("https://www.baidu.com/").build();
+    private NetBird netBird;
+    private List<ParserFactory> parserFactories;
 
-    private List<ParserFactory> parserFactories = new ArrayList<>();
-
-    {
-        parserFactories.add(new StringParserFactory());
+    private KingFisher(Builder builder) {
+        this.netBird = builder.netBird;
+        this.parserFactories = Utils.immutableList(builder.factories);
     }
 
     private <T> BaseCall<T> createCall(Type typeOfT) {
@@ -60,7 +63,33 @@ public class KingFisher {
     }
 
     public static class Builder {
+        private String baseUrl;
         private NetBird netBird;
         private List<ParserFactory> factories = new ArrayList<>(8);
+
+        public Builder baseUrl(String baseUrl) {
+            this.baseUrl = baseUrl;
+            return this;
+        }
+
+        public Builder client(NetBird netBird) {
+            this.netBird = netBird;
+            return this;
+        }
+
+        public Builder addParserFactory(ParserFactory factory) {
+            if (!this.factories.contains(factory)) {
+                this.factories.add(factory);
+            }
+            return this;
+        }
+
+        public synchronized void initialize() {
+            if (netBird == null) {
+                netBird = new NetBird.Builder(Utils.checkedUrl(baseUrl)).build();
+            }
+            factories.add(new StringParserFactory());
+            KingFisher.instance = new KingFisher(this);
+        }
     }
 }
