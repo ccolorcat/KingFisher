@@ -16,11 +16,10 @@
 
 package cc.colorcat.kingfisher.core;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
-import cc.colorcat.netbird.DownloadListener;
 import cc.colorcat.netbird.FileParser;
 import cc.colorcat.netbird.MRequest;
 import cc.colorcat.netbird.Method;
@@ -79,14 +78,20 @@ public final class BaseCall<T> implements Call<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public void download(File savePath, DownloadListener listener) {
-        Parser parser = FileParser.create(savePath);
+    public void download(DownPack pack) {
+        Parser parser = FileParser.create(pack.savePath);
         builder.parser(parser);
-        builder.downloadListener(listener);
+        builder.downloadListener(pack.listener);
     }
 
-    public void upload(FilePart part) {
-        builder.addFile(part.name, part.contentType, part.file, part.listener);
+    public void upload(UpPack pack) {
+        builder.addFile(pack.name, pack.contentType, pack.file, pack.listener);
+    }
+
+    public void batchUpload(List<UpPack> packs) {
+        for (UpPack pack : packs) {
+            builder.addFile(pack.name, pack.contentType, pack.file, pack.listener);
+        }
     }
 
     @Override

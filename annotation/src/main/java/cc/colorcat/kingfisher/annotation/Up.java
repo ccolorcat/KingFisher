@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-package cc.colorcat.kingfisher.core;
+package cc.colorcat.kingfisher.annotation;
 
-import java.io.File;
-
-import cc.colorcat.netbird.UploadListener;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Author: cxx
  * Date: 2018-10-10
  * GitHub: https://github.com/ccolorcat
  */
-public class FilePart {
-    String name;
-    String contentType;
-    File file;
-    UploadListener listener;
+@Target(ElementType.PARAMETER)
+@Retention(RetentionPolicy.CLASS)
+public @interface Up {
 }

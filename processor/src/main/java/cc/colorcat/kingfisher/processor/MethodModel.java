@@ -20,6 +20,7 @@ import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +50,9 @@ class MethodModel {
     private final String paramMapName;
     private final List<Pair<String, String>> headers;
     private final String headerMapName;
+    private final String downPackName;
+    private final String upPackName;
+    private final String batchUpPackName;
     private final TypeName returnType;
 
     private MethodModel(Builder builder) {
@@ -61,6 +65,9 @@ class MethodModel {
         this.paramMapName = builder.paramMapName;
         this.headers = builder.headers;
         this.headerMapName = builder.headerMapName;
+        this.downPackName = builder.downPackName;
+        this.upPackName = builder.upPackName;
+        this.batchUpPackName = builder.batchUpPackName;
         this.returnType = builder.returnType;
     }
 
@@ -72,6 +79,8 @@ class MethodModel {
         processMethod(builder);
         processParameters(builder);
         processHeaders(builder);
+        processDownload(builder);
+        processUpload(builder);
         processReturn(builder);
         return builder.build();
     }
@@ -131,6 +140,20 @@ class MethodModel {
         }
     }
 
+    private void processDownload(MethodSpec.Builder builder) {
+        if (downPackName != null) {
+            builder.addStatement("$N.download($N)", CALL, downPackName);
+        }
+    }
+
+    private void processUpload(MethodSpec.Builder builder) {
+        if (upPackName != null) {
+            builder.addStatement("$N.upload($N)", CALL, upPackName);
+        } else if (batchUpPackName != null) {
+            builder.addStatement("$N.batchUpload($N)", CALL, batchUpPackName);
+        }
+    }
+
     private void processReturn(MethodSpec.Builder builder) {
         builder.addStatement("return $N", CALL);
     }
@@ -185,6 +208,27 @@ class MethodModel {
          * @see cc.colorcat.kingfisher.annotation.HeaderMap
          */
         private String headerMapName;
+        /**
+         * download file
+         *
+         * @see cc.colorcat.kingfisher.core.DownPack
+         * @see cc.colorcat.kingfisher.annotation.Down
+         */
+        private String downPackName;
+        /**
+         * upload file
+         *
+         * @see cc.colorcat.kingfisher.core.UpPack
+         * @see cc.colorcat.kingfisher.annotation.Up
+         */
+        private String upPackName;
+        /**
+         * batch upload file
+         *
+         * @see cc.colorcat.kingfisher.core.UpPack
+         * @see cc.colorcat.kingfisher.annotation.Up
+         */
+        private String batchUpPackName;
         private TypeName returnType;
 
         Builder(ExecutableElement element) {
@@ -242,6 +286,30 @@ class MethodModel {
             return this;
         }
 
+        Builder downPack(String name) {
+            if (this.downPackName != null) {
+                throw new IllegalArgumentException(element + ", more than one Down");
+            }
+            this.downPackName = name;
+            return this;
+        }
+
+        Builder upPack(String name) {
+            if (this.upPackName != null || this.batchUpPackName != null) {
+                throw new IllegalArgumentException(element + ", more than one Up");
+            }
+            this.upPackName = name;
+            return this;
+        }
+
+        Builder batchUpPack(String name) {
+            if (this.upPackName != null || this.batchUpPackName != null) {
+                throw new IllegalArgumentException(element + ", more than one Up");
+            }
+            this.batchUpPackName = name;
+            return this;
+        }
+
         Builder returnType(TypeName typeName) {
             this.returnType = typeName;
             return this;
@@ -250,6 +318,9 @@ class MethodModel {
         MethodModel build() {
             Utils.checkNotNull(method, element + ", no request method");
             Utils.checkNotNull(returnType, element + ", no return type");
+            if (downPackName != null && !File.class.getCanonicalName().equals(returnType.toString())) {
+                throw new IllegalArgumentException(element + ", must be return Call<File> if has @Down");
+            }
             for (int i = 0, size = relativePaths.size(); i < size; ++i) {
                 Pair<String, String> pair = relativePaths.get(i);
                 String rp = '{' + pair.first + '}';

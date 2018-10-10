@@ -59,13 +59,19 @@ public class KingFisher {
                 return (Parser<? extends T>) parser;
             }
         }
-        throw new UnsupportedOperationException("no parser supported");
+        throw new UnsupportedOperationException("no ParserFactory supported for " + typeOfT);
     }
 
     public static class Builder {
         private String baseUrl;
         private NetBird netBird;
-        private List<ParserFactory<?>> factories = new ArrayList<>(8);
+        private List<ParserFactory<?>> factories;
+
+        public Builder() {
+            factories = new ArrayList<>(8);
+            factories.add(new FakeFileParserFactory());
+            factories.add(new StringParserFactory());
+        }
 
         public Builder baseUrl(String baseUrl) {
             this.baseUrl = baseUrl;
@@ -86,10 +92,7 @@ public class KingFisher {
 
         public synchronized void initialize() {
             if (netBird == null) {
-                netBird = new NetBird.Builder(Utils.checkedUrl(baseUrl)).build();
-            }
-            if (factories.isEmpty()) {
-                throw new IllegalStateException("no ParserFactory");
+                netBird = new NetBird.Builder(baseUrl).build();
             }
             KingFisher.instance = new KingFisher(this);
         }

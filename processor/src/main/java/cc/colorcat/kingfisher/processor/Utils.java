@@ -35,6 +35,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 
 import cc.colorcat.kingfisher.core.Call;
+import cc.colorcat.kingfisher.core.DownPack;
 
 /**
  * Author: cxx
@@ -42,17 +43,25 @@ import cc.colorcat.kingfisher.core.Call;
  * GitHub: https://github.com/ccolorcat
  */
 final class Utils {
-    private static final String TYPE = String.format(
+    private static final String STRING_MAP = String.format(
             "%s<%s,%s>",
             Map.class.getCanonicalName(),
             String.class.getCanonicalName(),
             String.class.getCanonicalName()
     );
+    private static final String DOWN_PACK = DownPack.class.getCanonicalName();
 
     static void assertStringMap(Element element) {
-        String type = element.asType().toString();
-        if (!TYPE.equals(type)) {
-            throw new IllegalArgumentException(element + ", must be " + TYPE + " but is " + type);
+        String typeName = element.asType().toString();
+        if (!STRING_MAP.equals(typeName)) {
+            throw new IllegalArgumentException(element + " must be " + STRING_MAP + " but is " + typeName);
+        }
+    }
+
+    static void assertDownPack(Element element) {
+        String typeName = element.asType().toString();
+        if (!DOWN_PACK.equals(typeName)) {
+            throw new IllegalArgumentException(element + " must be DownPack but is " + typeName);
         }
     }
 
@@ -99,17 +108,17 @@ final class Utils {
         if (typeName instanceof ParameterizedTypeName) {
             ParameterizedTypeName ptn = (ParameterizedTypeName) typeName;
             if (ClassName.get(Call.class).compareTo(ptn.rawType) != 0) {
-                throw new IllegalArgumentException(element + ", returns " + typeName + ", it must be " + Call.class.getCanonicalName());
+                throw new IllegalArgumentException(element + " returns " + typeName + ", it must be " + Call.class.getCanonicalName());
             }
             List<TypeName> typeArguments = ptn.typeArguments;
             if (typeArguments.size() != 1) {
-                throw new IllegalArgumentException(element + ", returns " + typeName + ", it must have one and only one generic type");
+                throw new IllegalArgumentException(element + " returns " + typeName + ", it must have one and only one generic type");
             }
             TypeName actualTypeName = typeArguments.get(0);
             assertNoWildcardType(actualTypeName, element);
             return actualTypeName;
         }
-        throw new IllegalArgumentException(element + ", returns " + typeName + ", it missing type parameter");
+        throw new IllegalArgumentException(element + " returns " + typeName + ", it missing type parameter");
     }
 
     private static void assertNoWildcardType(TypeName typeName, ExecutableElement element) {

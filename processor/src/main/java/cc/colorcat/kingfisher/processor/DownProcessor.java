@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-package cc.colorcat.kingfisher.annotation;
+package cc.colorcat.kingfisher.processor;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.Annotation;
+
+import javax.lang.model.element.Element;
 
 /**
  * Author: cxx
  * Date: 2018-10-10
  * GitHub: https://github.com/ccolorcat
  */
-@Target(ElementType.PARAMETER)
-@Retention(RetentionPolicy.CLASS)
-public @interface Upload {
+public class DownProcessor implements AnnotationProcessor {
+    @Override
+    public void process(MethodModel.Builder builder, Element element, Annotation annotation) {
+        Utils.assertDownPack(element);
+        builder.downPack(element.getSimpleName().toString());
+    }
 }

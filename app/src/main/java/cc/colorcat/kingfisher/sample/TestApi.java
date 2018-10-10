@@ -16,14 +16,20 @@
 
 package cc.colorcat.kingfisher.sample;
 
+import java.io.File;
 import java.util.List;
 
 import cc.colorcat.kingfisher.annotation.Api;
+import cc.colorcat.kingfisher.annotation.Down;
 import cc.colorcat.kingfisher.annotation.GET;
+import cc.colorcat.kingfisher.annotation.POST;
 import cc.colorcat.kingfisher.annotation.Param;
 import cc.colorcat.kingfisher.annotation.Path;
+import cc.colorcat.kingfisher.annotation.Up;
 import cc.colorcat.kingfisher.annotation.Url;
 import cc.colorcat.kingfisher.core.Call;
+import cc.colorcat.kingfisher.core.DownPack;
+import cc.colorcat.kingfisher.core.UpPack;
 
 /**
  * Author: cxx
@@ -39,4 +45,12 @@ public interface TestApi {
     @Url("http://www.imooc.com/")
     @GET("api/teacher")
     Call<List<Course>> listCourses(@Param("type") int type, @Param("num") int num);
+
+    @Url("https://dldir1.qq.com/weixin/android/weixin673android1360.apk")
+    @GET
+    Call<File> downWeChat(@Down DownPack pack);
+
+    @Url("https://sdfsdfsdfds.sfsdf.sdfsf/")
+    @POST
+    Call<String> uploadAvatar(@Up List<UpPack> packs);
 }
