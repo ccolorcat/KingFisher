@@ -29,7 +29,7 @@ import cc.colorcat.netbird.Response;
  * Date: 2018-10-10
  * GitHub: https://github.com/ccolorcat
  */
-public class FakeFileParserFactory implements ParserFactory<File> {
+class FakeFileParserFactory implements ParserFactory<File> {
     private Parser<File> parser = new FakeFileParser();
 
     @Override
