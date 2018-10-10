@@ -14,29 +14,19 @@
  * limitations under the License.
  */
 
-package cc.colorcat.kingfisher.parser.gson;
+package cc.colorcat.kingfisher.annotation;
 
-import com.google.gson.Gson;
-
-import java.lang.reflect.Type;
-
-import cc.colorcat.kingfisher.core.ParserFactory;
-import cc.colorcat.netbird.Parser;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Author: cxx
- * Date: 2018-10-09
+ * Date: 2018-10-10
  * GitHub: https://github.com/ccolorcat
  */
-public final class GsonParserFactory<T> implements ParserFactory<T> {
-    private final Gson gson;
-
-    public GsonParserFactory(Gson gson) {
-        this.gson = gson;
-    }
-
-    @Override
-    public Parser<? extends T> newParser(Type typeOfT) {
-        return new GsonParser<>(gson, typeOfT);
-    }
+@Target(ElementType.PARAMETER)
+@Retention(RetentionPolicy.CLASS)
+public @interface Upload {
 }

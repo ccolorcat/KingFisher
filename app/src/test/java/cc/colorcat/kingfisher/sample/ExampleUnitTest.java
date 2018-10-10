@@ -6,11 +6,13 @@ import com.google.gson.GsonBuilder;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.List;
 
 import cc.colorcat.kingfisher.core.KingFisher;
 import cc.colorcat.kingfisher.core.StringParserFactory;
 import cc.colorcat.kingfisher.parser.gson.GsonParserFactory;
 import cc.colorcat.netbird.NetBird;
+import cc.colorcat.parser.gson.GsonParser;
 
 import static org.junit.Assert.assertEquals;
 
@@ -35,11 +37,11 @@ public class ExampleUnitTest {
         new KingFisher.Builder()
                 .client(netBird)
                 .addParserFactory(new StringParserFactory())
-//                .addParserFactory(new ResultParserFactory(gson))
+                .addParserFactory(new ResultParserFactory(gson))
                 .addParserFactory(new GsonParserFactory(gson))
                 .initialize();
         TestApi api = new TestApiService();
-        System.out.println(api.listRepos("ccolorcat").execute());
-//        System.out.println(api.listCourses(4, 30).execute());
+        System.out.println(api.listRepos("ccolorcat").parser(new GsonParser<List<Repo>>() {}).execute());
+        System.out.println(api.listCourses(4, 30).execute());
     }
 }

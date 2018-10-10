@@ -14,29 +14,20 @@
  * limitations under the License.
  */
 
-package cc.colorcat.kingfisher.parser.gson;
+package cc.colorcat.kingfisher.core;
 
-import com.google.gson.Gson;
+import java.io.File;
 
-import java.lang.reflect.Type;
-
-import cc.colorcat.kingfisher.core.ParserFactory;
-import cc.colorcat.netbird.Parser;
+import cc.colorcat.netbird.UploadListener;
 
 /**
  * Author: cxx
- * Date: 2018-10-09
+ * Date: 2018-10-10
  * GitHub: https://github.com/ccolorcat
  */
-public final class GsonParserFactory<T> implements ParserFactory<T> {
-    private final Gson gson;
-
-    public GsonParserFactory(Gson gson) {
-        this.gson = gson;
-    }
-
-    @Override
-    public Parser<? extends T> newParser(Type typeOfT) {
-        return new GsonParser<>(gson, typeOfT);
-    }
+public class FilePart {
+    String name;
+    String contentType;
+    File file;
+    UploadListener listener;
 }

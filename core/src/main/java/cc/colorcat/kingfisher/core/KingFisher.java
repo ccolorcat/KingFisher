@@ -39,7 +39,7 @@ public class KingFisher {
     }
 
     private NetBird netBird;
-    private List<ParserFactory> parserFactories;
+    private List<ParserFactory<?>> parserFactories;
 
     private KingFisher(Builder builder) {
         this.netBird = builder.netBird;
@@ -65,7 +65,7 @@ public class KingFisher {
     public static class Builder {
         private String baseUrl;
         private NetBird netBird;
-        private List<ParserFactory> factories = new ArrayList<>(8);
+        private List<ParserFactory<?>> factories = new ArrayList<>(8);
 
         public Builder baseUrl(String baseUrl) {
             this.baseUrl = baseUrl;
@@ -77,7 +77,7 @@ public class KingFisher {
             return this;
         }
 
-        public Builder addParserFactory(ParserFactory factory) {
+        public Builder addParserFactory(ParserFactory<?> factory) {
             if (!this.factories.contains(factory)) {
                 this.factories.add(factory);
             }

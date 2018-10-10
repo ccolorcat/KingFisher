@@ -18,12 +18,17 @@ package cc.colorcat.kingfisher.core;
 
 import java.io.IOException;
 
+import cc.colorcat.netbird.Parser;
+
+
 /**
  * Author: cxx
  * Date: 2018-09-29
  * GitHub: https://github.com/ccolorcat
  */
 public interface Call<T> {
+    Call<T> parser(Parser<? extends T> parser);
+
     T execute() throws IOException;
 
     void enqueue(Callback<T> callback);

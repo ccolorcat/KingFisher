@@ -10,9 +10,9 @@ import cc.colorcat.netbird.StringParser;
  * Date: 2018-09-30
  * GitHub: https://github.com/ccolorcat
  */
-public class StringParserFactory implements ParserFactory {
+public class StringParserFactory implements ParserFactory<String> {
     @Override
-    public Parser<String> newParser(Type typeOfT) {
+    public Parser<? extends String> newParser(Type typeOfT) {
         if (typeOfT instanceof Class) {
             Class<?> clazz = (Class) typeOfT;
             if (clazz.isAssignableFrom(String.class)) {

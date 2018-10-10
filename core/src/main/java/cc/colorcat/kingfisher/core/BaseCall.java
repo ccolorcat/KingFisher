@@ -16,9 +16,12 @@
 
 package cc.colorcat.kingfisher.core;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
+import cc.colorcat.netbird.DownloadListener;
+import cc.colorcat.netbird.FileParser;
 import cc.colorcat.netbird.MRequest;
 import cc.colorcat.netbird.Method;
 import cc.colorcat.netbird.NetBird;
@@ -40,19 +43,19 @@ public final class BaseCall<T> implements Call<T> {
     }
 
     public void url(String url) {
-        this.builder.url(url);
+        builder.url(url);
     }
 
     public void path(String path) {
-        this.builder.path(path);
+        builder.path(path);
     }
 
     public void method(Method method) {
-        this.builder.method(method);
+        builder.method(method);
     }
 
     public void method(String method) {
-        this.builder.method(Method.valueOf(method));
+        builder.method(Method.valueOf(method));
     }
 
     public void parameter(String name, String value) {
@@ -73,6 +76,23 @@ public final class BaseCall<T> implements Call<T> {
         for (Map.Entry<String, String> nameAndValue : headers.entrySet()) {
             builder.add(nameAndValue.getKey(), nameAndValue.getValue());
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void download(File savePath, DownloadListener listener) {
+        Parser parser = FileParser.create(savePath);
+        builder.parser(parser);
+        builder.downloadListener(listener);
+    }
+
+    public void upload(FilePart part) {
+        builder.addFile(part.name, part.contentType, part.file, part.listener);
+    }
+
+    @Override
+    public Call<T> parser(Parser<? extends T> parser) {
+        builder.parser(parser);
+        return this;
     }
 
     @Override

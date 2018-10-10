@@ -33,7 +33,7 @@ import cc.colorcat.netbird.StateIOException;
  * Date: 2018-10-09
  * GitHub: https://github.com/ccolorcat
  */
-public class ResultParserFactory implements ParserFactory {
+public class ResultParserFactory<T> implements ParserFactory<T> {
     private Gson gson;
 
     public ResultParserFactory(Gson gson) {
@@ -41,8 +41,8 @@ public class ResultParserFactory implements ParserFactory {
     }
 
     @Override
-    public Parser<?> newParser(Type typeOfT) {
-        return new ResultParser(gson, typeOfT);
+    public Parser<? extends T> newParser(Type typeOfT) {
+        return new ResultParser<>(gson, typeOfT);
     }
 
     static class ResultParser<T> implements Parser<T> {
@@ -58,16 +58,16 @@ public class ResultParserFactory implements ParserFactory {
         public NetworkData<? extends T> parse(Response response) throws IOException {
             try {
                 // fastjson
-//            val content = response.responseBody().string()
-//            val pt = ParameterizedTypeImpl(types, null, Result::class.java)
-//            val result = JSON.parseObject<Result<T>>(content, pt)
+//                String content = response.responseBody().string();
+//                ParameterizedType pt = new ParameterizedTypeImpl(new Type[]{typeOfT}, null, Result.class);
+//                Result<T> result = JSON.parseObject(content, pt);
 
                 // jackson
-//            val reader = response.responseBody().reader()
-//            val factory = TypeFactory.defaultInstance()
-//            val innerType = factory.constructType(types[0])
-//            val outerType = factory.constructParametricType(Result::class.java, innerType)
-//            val result = MAPPER.readValue<Result<T>>(reader, outerType)
+//                Reader reader = response.responseBody().reader();
+//                TypeFactory factory = TypeFactory.defaultInstance();
+//                JavaType innerType = factory.constructType(typeOfT);
+//                JavaType outerType = factory.constructParametricType(Result.class, innerType);
+//                Result<T> result = MAPPER.readValue(reader, outerType);
 
                 // gson
                 Type type = TypeToken.getParameterized(Result.class, typeOfT).getType();

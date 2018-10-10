@@ -54,6 +54,7 @@ dependencies {
     implementation rootProject.ext.jackson
     implementation rootProject.ext.fastJson
     implementation 'com.github.ccolorcat.NetBird:netbird-logging-support:v4.3.4'
+    implementation 'com.github.ccolorcat.NetBird:netbird-gson-parser:v4.3.4'
     annotationProcessor project(':processor')
     implementation project(':annotation')
     implementation project(':core')
