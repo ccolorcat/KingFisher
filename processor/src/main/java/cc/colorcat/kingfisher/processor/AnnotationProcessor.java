@@ -25,6 +25,6 @@ import javax.lang.model.element.Element;
  * Date: 2018-10-02
  * GitHub: https://github.com/ccolorcat
  */
-public interface AnnotationProcessor {
-    void process(MethodModel.Builder builder, Element element, Annotation annotation);
+public interface AnnotationProcessor<A extends Annotation> {
+    void process(MethodModel.Builder builder, Element element, A a);
 }

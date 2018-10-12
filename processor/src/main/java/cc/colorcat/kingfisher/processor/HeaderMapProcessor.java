@@ -16,18 +16,18 @@
 
 package cc.colorcat.kingfisher.processor;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
+
+import cc.colorcat.kingfisher.annotation.HeaderMap;
 
 /**
  * Author: cxx
  * Date: 2018-10-08
  * GitHub: https://github.com/ccolorcat
  */
-public class HeaderMapProcessor implements AnnotationProcessor {
+final class HeaderMapProcessor implements AnnotationProcessor<HeaderMap> {
     @Override
-    public void process(MethodModel.Builder builder, Element element, Annotation annotation) {
+    public void process(MethodModel.Builder builder, Element element, HeaderMap headerMap) {
         Utils.assertStringMap(element);
         builder.headerMap(element.getSimpleName().toString());
     }

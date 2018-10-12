@@ -16,8 +16,6 @@
 
 package cc.colorcat.kingfisher.processor;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 
 import cc.colorcat.kingfisher.annotation.DELETE;
@@ -27,10 +25,9 @@ import cc.colorcat.kingfisher.annotation.DELETE;
  * Date: 2018-10-08
  * GitHub: https://github.com/ccolorcat
  */
-public class DeleteProcessor implements AnnotationProcessor {
+final class DeleteProcessor implements AnnotationProcessor<DELETE> {
     @Override
-    public void process(MethodModel.Builder builder, Element element, Annotation annotation) {
-        DELETE delete = (DELETE) annotation;
+    public void process(MethodModel.Builder builder, Element element, DELETE delete) {
         builder.path(delete.value()).method("DELETE");
     }
 }

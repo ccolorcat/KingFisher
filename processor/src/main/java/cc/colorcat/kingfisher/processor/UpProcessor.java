@@ -16,11 +16,11 @@
 
 package cc.colorcat.kingfisher.processor;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import javax.lang.model.element.Element;
 
+import cc.colorcat.kingfisher.annotation.Up;
 import cc.colorcat.kingfisher.core.UpPack;
 
 /**
@@ -28,14 +28,14 @@ import cc.colorcat.kingfisher.core.UpPack;
  * Date: 2018-10-10
  * GitHub: https://github.com/ccolorcat
  */
-public class UpProcessor implements AnnotationProcessor {
+final class UpProcessor implements AnnotationProcessor<Up> {
     private static String UP_PACK = UpPack.class.getCanonicalName();
     private static String UP_PACK_LIST = String.format(
             "%s<%s>", List.class.getCanonicalName(), UpPack.class.getCanonicalName()
     );
 
     @Override
-    public void process(MethodModel.Builder builder, Element element, Annotation annotation) {
+    public void process(MethodModel.Builder builder, Element element, Up up) {
         String typeName = element.asType().toString();
         String paramName = element.getSimpleName().toString();
         if (UP_PACK.equals(typeName)) {

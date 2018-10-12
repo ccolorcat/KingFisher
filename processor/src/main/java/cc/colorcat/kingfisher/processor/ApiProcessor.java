@@ -133,6 +133,7 @@ public class ApiProcessor extends AbstractProcessor {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void process(MethodModel.Builder builder, Element element, Annotation annotation) {
         AnnotationProcessor processor = this.processors.get(annotation.annotationType());
         if (processor != null) {

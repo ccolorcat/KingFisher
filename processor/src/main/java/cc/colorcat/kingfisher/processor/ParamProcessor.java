@@ -16,8 +16,6 @@
 
 package cc.colorcat.kingfisher.processor;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 
 import cc.colorcat.kingfisher.annotation.Param;
@@ -27,10 +25,9 @@ import cc.colorcat.kingfisher.annotation.Param;
  * Date: 2018-10-08
  * GitHub: https://github.com/ccolorcat
  */
-public class ParamProcessor implements AnnotationProcessor {
+final class ParamProcessor implements AnnotationProcessor<Param> {
     @Override
-    public void process(MethodModel.Builder builder, Element element, Annotation annotation) {
-        Param param = (Param) annotation;
+    public void process(MethodModel.Builder builder, Element element, Param param) {
         builder.addParameter(new Pair<>(param.value(), element.getSimpleName().toString()));
     }
 }

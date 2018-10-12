@@ -16,8 +16,6 @@
 
 package cc.colorcat.kingfisher.processor;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 
 import cc.colorcat.kingfisher.annotation.OPTIONS;
@@ -27,10 +25,9 @@ import cc.colorcat.kingfisher.annotation.OPTIONS;
  * Date: 2018-10-08
  * GitHub: https://github.com/ccolorcat
  */
-public class OptionsProcessor implements AnnotationProcessor {
+final class OptionsProcessor implements AnnotationProcessor<OPTIONS> {
     @Override
-    public void process(MethodModel.Builder builder, Element element, Annotation annotation) {
-        OPTIONS options = (OPTIONS) annotation;
+    public void process(MethodModel.Builder builder, Element element, OPTIONS options) {
         builder.path(options.value()).method("OPTIONS");
     }
 }

@@ -16,8 +16,6 @@
 
 package cc.colorcat.kingfisher.processor;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 
 import cc.colorcat.kingfisher.annotation.POST;
@@ -27,10 +25,9 @@ import cc.colorcat.kingfisher.annotation.POST;
  * Date: 2018-10-08
  * GitHub: https://github.com/ccolorcat
  */
-class PostProcessor implements AnnotationProcessor {
+final class PostProcessor implements AnnotationProcessor<POST> {
     @Override
-    public void process(MethodModel.Builder builder, Element element, Annotation annotation) {
-        POST post = (POST) annotation;
+    public void process(MethodModel.Builder builder, Element element, POST post) {
         builder.path(post.value()).method("POST");
     }
 }

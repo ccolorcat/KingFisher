@@ -16,8 +16,6 @@
 
 package cc.colorcat.kingfisher.processor;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 
 import cc.colorcat.kingfisher.annotation.PUT;
@@ -27,10 +25,9 @@ import cc.colorcat.kingfisher.annotation.PUT;
  * Date: 2018-10-08
  * GitHub: https://github.com/ccolorcat
  */
-public class PutProcessor implements AnnotationProcessor {
+final class PutProcessor implements AnnotationProcessor<PUT> {
     @Override
-    public void process(MethodModel.Builder builder, Element element, Annotation annotation) {
-        PUT put = (PUT) annotation;
+    public void process(MethodModel.Builder builder, Element element, PUT put) {
         builder.path(put.value()).method("PUT");
     }
 }

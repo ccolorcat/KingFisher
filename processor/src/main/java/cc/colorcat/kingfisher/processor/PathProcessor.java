@@ -16,8 +16,6 @@
 
 package cc.colorcat.kingfisher.processor;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 
 import cc.colorcat.kingfisher.annotation.Path;
@@ -27,10 +25,9 @@ import cc.colorcat.kingfisher.annotation.Path;
  * Date: 2018-10-08
  * GitHub: https://github.com/ccolorcat
  */
-public class PathProcessor implements AnnotationProcessor {
+final class PathProcessor implements AnnotationProcessor<Path> {
     @Override
-    public void process(MethodModel.Builder builder, Element element, Annotation annotation) {
-        Path path = (Path) annotation;
+    public void process(MethodModel.Builder builder, Element element, Path path) {
         builder.addRelativePath(new Pair<>(path.value(), element.getSimpleName().toString()));
     }
 }

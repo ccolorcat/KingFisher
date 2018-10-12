@@ -16,18 +16,18 @@
 
 package cc.colorcat.kingfisher.processor;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
+
+import cc.colorcat.kingfisher.annotation.Down;
 
 /**
  * Author: cxx
  * Date: 2018-10-10
  * GitHub: https://github.com/ccolorcat
  */
-public class DownProcessor implements AnnotationProcessor {
+final class DownProcessor implements AnnotationProcessor<Down> {
     @Override
-    public void process(MethodModel.Builder builder, Element element, Annotation annotation) {
+    public void process(MethodModel.Builder builder, Element element, Down down) {
         Utils.assertDownPack(element);
         builder.downPack(element.getSimpleName().toString());
     }

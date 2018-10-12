@@ -16,8 +16,6 @@
 
 package cc.colorcat.kingfisher.processor;
 
-import java.lang.annotation.Annotation;
-
 import javax.lang.model.element.Element;
 
 import cc.colorcat.kingfisher.annotation.Header;
@@ -27,10 +25,9 @@ import cc.colorcat.kingfisher.annotation.Header;
  * Date: 2018-10-08
  * GitHub: https://github.com/ccolorcat
  */
-public class HeaderProcessor implements AnnotationProcessor {
+final class HeaderProcessor implements AnnotationProcessor<Header> {
     @Override
-    public void process(MethodModel.Builder builder, Element element, Annotation annotation) {
-        Header header = (Header) annotation;
+    public void process(MethodModel.Builder builder, Element element, Header header) {
         builder.addHeader(new Pair<>(header.value(), element.getSimpleName().toString()));
     }
 }
