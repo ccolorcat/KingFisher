@@ -16,6 +16,8 @@
 
 package cc.colorcat.kingfisher.sample;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -34,16 +36,28 @@ public class Course {
      * learner : 13436
      */
 
+    @JSONField(name = "id")
+    @JsonProperty("id")
     @SerializedName("id")
     private int id;
+    @JSONField(name = "name")
+    @JsonProperty("name")
     @SerializedName("name")
     private String name;
+    @JSONField(name = "picSmall")
+    @JsonProperty("picSmall")
     @SerializedName("picSmall")
     private String picSmall;
+    @JSONField(name = "picBig")
+    @JsonProperty("picBig")
     @SerializedName("picBig")
     private String picBig;
+    @JSONField(name = "description")
+    @JsonProperty("description")
     @SerializedName("description")
     private String description;
+    @JSONField(name = "learner")
+    @JsonProperty("learner")
     @SerializedName("learner")
     private int learner;
 

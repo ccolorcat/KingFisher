@@ -59,4 +59,6 @@ dependencies {
     implementation project(':annotation')
     implementation project(':core')
     implementation project(':gson_parser_factory')
+    implementation project(':jackson_parser_factory')
+    implementation project(':fastjson_parser_factory')
 }

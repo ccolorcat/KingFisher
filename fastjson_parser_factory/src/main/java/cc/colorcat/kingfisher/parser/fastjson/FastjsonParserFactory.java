@@ -14,4 +14,21 @@
  * limitations under the License.
  */
 
-include ':app', ':annotation', ':processor', ':core', ':gson_parser_factory', ':jackson_parser_factory', ':fastjson_parser_factory'
+package cc.colorcat.kingfisher.parser.fastjson;
+
+import java.lang.reflect.Type;
+
+import cc.colorcat.kingfisher.core.ParserFactory;
+import cc.colorcat.netbird.Parser;
+
+/**
+ * Author: cxx
+ * Date: 2018-10-12
+ * GitHub: https://github.com/ccolorcat
+ */
+public final class FastjsonParserFactory<T> implements ParserFactory<T> {
+    @Override
+    public Parser<? extends T> newParser(Type typeOfT) {
+        return new FastjsonParser<>(typeOfT);
+    }
+}

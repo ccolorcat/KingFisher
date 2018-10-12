@@ -7,14 +7,13 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import cc.colorcat.kingfisher.core.DownPack;
 import cc.colorcat.kingfisher.core.KingFisher;
+import cc.colorcat.kingfisher.parser.fastjson.FastjsonParserFactory;
 import cc.colorcat.kingfisher.parser.gson.GsonParserFactory;
 import cc.colorcat.netbird.DownloadListener;
 import cc.colorcat.netbird.NetBird;
-import cc.colorcat.parser.gson.GsonParser;
 
 import static org.junit.Assert.assertEquals;
 
@@ -32,8 +31,10 @@ public class ExampleUnitTest {
         Gson gson = new GsonBuilder().create();
         new KingFisher.Builder()
                 .client(netBird)
-                .addParserFactory(new ResultParserFactory(gson))
-                .addParserFactory(new GsonParserFactory(gson))
+//                .addParserFactory(new ResultParserFactory(gson))
+//                .addParserFactory(new JacksonParserFactory<>(new ObjectMapper()))
+                .addParserFactory(new GsonParserFactory<>(gson))
+//                .addParserFactory(new FastjsonParserFactory<>())
                 .initialize();
     }
 
@@ -45,8 +46,8 @@ public class ExampleUnitTest {
     @Test
     public void testKingFisher() throws IOException {
         TestApi api = new TestApiService();
-        System.out.println(api.listRepos("ccolorcat").parser(new GsonParser<List<Repo>>() {}).execute());
-        System.out.println(api.listCourses(4, 30).execute());
+        System.out.println(api.listRepos("ccolorcat").execute());
+//        System.out.println(api.listCourses(4, 30).execute());
     }
 
     @Test
