@@ -20,7 +20,7 @@
 | processor               | 处理注解，并生成代码，必须。 |
 | gson_parser_factory     | 提供 Gson 数据解析支持。     |
 | jackson_parser_factory  | 提供 Jackson 数据解析支持。  |
-| fastjson-parser-factory | 提供 fastjson 数据解析支持。 |
+| fastjson-parser-factory | 提供 Fastjson 数据解析支持。 |
 
 ## 3. 用法举例
 
@@ -31,7 +31,7 @@ NetBird netBird = new NetBird.Builder("https://api.github.com/")
     .addTailInterceptor(new JsonLoggingTailInterceptor())
     .enableGzip(true)
     .build();
-// 简单初始化无需单独设置 client，此处添加了自定义日志模块。
+// 简单初始化无需单独设置 client 但需设置 baseUrl，此处添加了自定义日志模块。
 new KingFisher.Builder()
     .client(netBird)
     .addParserFactory(new GsonParserFactory<>(new Gson()))
