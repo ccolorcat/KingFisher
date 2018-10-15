@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
  * GitHub: https://github.com/ccolorcat
  */
 public abstract class TypeToken<T> {
-    public final Type generateType() {
+    public final Type actualType() {
         Type superClass = getClass().getGenericSuperclass();
         if (superClass instanceof Class) {
             throw new RuntimeException("Missing type parameter.");

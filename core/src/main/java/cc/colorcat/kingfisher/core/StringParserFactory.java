@@ -10,7 +10,7 @@ import cc.colorcat.netbird.StringParser;
  * Date: 2018-09-30
  * GitHub: https://github.com/ccolorcat
  */
-public class StringParserFactory implements ParserFactory<String> {
+final class StringParserFactory implements ParserFactory<String> {
     @Override
     public Parser<? extends String> newParser(Type typeOfT) {
         if (typeOfT instanceof Class) {

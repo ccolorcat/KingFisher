@@ -86,7 +86,7 @@ class MethodModel {
     }
 
     private void processCall(MethodSpec.Builder builder) {
-        builder.addStatement("$T $N = new $T<$T>() {}.generateType()", Type.class, TYPE, TypeToken.class, returnType)
+        builder.addStatement("$T $N = new $T<$T>() {}.actualType()", Type.class, TYPE, TypeToken.class, returnType)
                 .addStatement("$T<$T> $N = $T.newCall($N)", BaseCall.class, returnType, CALL, KingFisher.class, TYPE);
     }
 
