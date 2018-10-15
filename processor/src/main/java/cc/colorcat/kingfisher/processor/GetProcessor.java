@@ -25,7 +25,7 @@ import cc.colorcat.kingfisher.annotation.GET;
  * Date: 2018-10-08
  * GitHub: https://github.com/ccolorcat
  */
-class GetProcessor implements AnnotationProcessor<GET> {
+final class GetProcessor implements AnnotationProcessor<GET> {
     @Override
     public void process(MethodModel.Builder builder, Element element, GET get) {
         builder.path(get.value()).method("GET");

@@ -21,7 +21,7 @@ package cc.colorcat.kingfisher.processor;
  * Date: 2018-09-29
  * GitHub: https://github.com/ccolorcat
  */
-class Pair<F, S> {
+final class Pair<F, S> {
     final F first;
     final S second;
 
