@@ -1,16 +1,15 @@
 package cc.colorcat.kingfisher.sample;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import cc.colorcat.kingfisher.core.DownPack;
 import cc.colorcat.kingfisher.core.KingFisher;
-import cc.colorcat.kingfisher.parser.fastjson.FastjsonParserFactory;
 import cc.colorcat.kingfisher.parser.gson.GsonParserFactory;
 import cc.colorcat.netbird.DownloadListener;
 import cc.colorcat.netbird.NetBird;
@@ -24,17 +23,13 @@ import static org.junit.Assert.assertEquals;
  */
 public class ExampleUnitTest {
     static {
-        NetBird netBird = new NetBird.Builder("https://www.baidu.com/")
+        NetBird netBird = new NetBird.Builder("https://api.github.com/")
                 .addTailInterceptor(new JsonLoggingTailInterceptor())
                 .enableGzip(true)
                 .build();
-        Gson gson = new GsonBuilder().create();
         new KingFisher.Builder()
                 .client(netBird)
-//                .addParserFactory(new ResultParserFactory(gson))
-//                .addParserFactory(new JacksonParserFactory<>(new ObjectMapper()))
-                .addParserFactory(new GsonParserFactory<>(gson))
-//                .addParserFactory(new FastjsonParserFactory<>())
+                .addParserFactory(new GsonParserFactory<>(new Gson()))
                 .initialize();
     }
 
@@ -46,8 +41,8 @@ public class ExampleUnitTest {
     @Test
     public void testKingFisher() throws IOException {
         TestApi api = new TestApiService();
-        System.out.println(api.listRepos("ccolorcat").execute());
-//        System.out.println(api.listCourses(4, 30).execute());
+        List<Repo> repos = api.listRepos("ccolorcat").execute();
+        System.out.println(repos);
     }
 
     @Test

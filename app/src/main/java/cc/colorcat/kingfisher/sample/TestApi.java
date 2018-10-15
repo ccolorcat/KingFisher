@@ -35,7 +35,6 @@ import cc.colorcat.kingfisher.core.DownPack;
  */
 @Api
 public interface TestApi {
-    @Url("https://api.github.com/")
     @GET("users/{user}/repos")
     Call<List<Repo>> listRepos(@Path("user") String user);
 
