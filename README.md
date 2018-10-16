@@ -91,7 +91,7 @@ allprojects {
 
 (2) 添加项目依赖：
 
-1. java
+java
 
 ```groovy
 dependencies {
@@ -105,7 +105,7 @@ dependencies {
 }
 ```
 
-2. kotlin
+kotlin
 
 ```groovy
 apply plugin: 'kotlin-kapt'
@@ -118,6 +118,14 @@ dependencies {
     implementation 'com.github.ccolorcat.KingFisher:gson_parser_factory:v1.0.0'
     implementation 'com.github.ccolorcat.KingFisher:jackson-parser_factory:v1.0.0'
     implementation 'com.github.ccolorcat.KingFisher:fastjson-parser_factory:v1.0.0'
+}
+```
+
+安卓平台，需额外添加支持：
+
+```groovy
+dependencies {
+    implementation 'com.github.ccolorcat.NetBird:netbird-android-support:v4.3.4'
 }
 ```
 
