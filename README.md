@@ -91,12 +91,30 @@ allprojects {
 
 (2) 添加项目依赖：
 
+1. java
+
 ```groovy
 dependencies {
     implementation 'com.github.ccolorcat.NetBird:netbird:v4.3.4'
     implementation 'com.github.ccolorcat.KingFisher:core:v1.0.0'
     implementation 'com.github.ccolorcat.KingFisher:annotation:v1.0.0'
     annotationProcessor 'com.github.ccolorcat.KingFisher:processor:v1.0.0'
+    implementation 'com.github.ccolorcat.KingFisher:gson_parser_factory:v1.0.0'
+    implementation 'com.github.ccolorcat.KingFisher:jackson-parser_factory:v1.0.0'
+    implementation 'com.github.ccolorcat.KingFisher:fastjson-parser_factory:v1.0.0'
+}
+```
+
+2. kotlin
+
+```groovy
+apply plugin: 'kotlin-kapt'
+...
+dependencies {
+    implementation 'com.github.ccolorcat.NetBird:netbird:v4.3.4'
+    implementation 'com.github.ccolorcat.KingFisher:core:v1.0.0'
+    implementation 'com.github.ccolorcat.KingFisher:annotation:v1.0.0'
+    kapt 'com.github.ccolorcat.KingFisher:processor:v1.0.0'
     implementation 'com.github.ccolorcat.KingFisher:gson_parser_factory:v1.0.0'
     implementation 'com.github.ccolorcat.KingFisher:jackson-parser_factory:v1.0.0'
     implementation 'com.github.ccolorcat.KingFisher:fastjson-parser_factory:v1.0.0'
