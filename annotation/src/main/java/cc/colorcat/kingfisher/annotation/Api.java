@@ -27,6 +27,6 @@ import java.lang.annotation.Target;
  * GitHub: https://github.com/ccolorcat
  */
 @Target(ElementType.TYPE)
-@Retention(RetentionPolicy.CLASS)
+@Retention(RetentionPolicy.SOURCE)
 public @interface Api {
 }

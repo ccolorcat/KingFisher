@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * GitHub: https://github.com/ccolorcat
  */
 @Target(ElementType.METHOD)
-@Retention(RetentionPolicy.CLASS)
+@Retention(RetentionPolicy.SOURCE)
 public @interface GET {
     String value() default "";
 }

@@ -27,6 +27,6 @@ import java.lang.annotation.Target;
  * GitHub: https://github.com/ccolorcat
  */
 @Target(ElementType.PARAMETER)
-@Retention(RetentionPolicy.CLASS)
+@Retention(RetentionPolicy.SOURCE)
 public @interface Down {
 }
