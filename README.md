@@ -96,12 +96,12 @@ java
 ```groovy
 dependencies {
     implementation 'com.github.ccolorcat.NetBird:netbird:v4.3.4'
-    implementation 'com.github.ccolorcat.KingFisher:core:v1.0.0'
-    implementation 'com.github.ccolorcat.KingFisher:annotation:v1.0.0'
-    annotationProcessor 'com.github.ccolorcat.KingFisher:processor:v1.0.0'
-    implementation 'com.github.ccolorcat.KingFisher:gson_parser_factory:v1.0.0'
-    implementation 'com.github.ccolorcat.KingFisher:jackson-parser_factory:v1.0.0'
-    implementation 'com.github.ccolorcat.KingFisher:fastjson-parser_factory:v1.0.0'
+    implementation 'com.github.ccolorcat.KingFisher:core:v1.0.1'
+    implementation 'com.github.ccolorcat.KingFisher:annotation:v1.0.1'
+    annotationProcessor 'com.github.ccolorcat.KingFisher:processor:v1.0.1'
+    implementation 'com.github.ccolorcat.KingFisher:gson_parser_factory:v1.0.1'
+    implementation 'com.github.ccolorcat.KingFisher:jackson-parser_factory:v1.0.1'
+    implementation 'com.github.ccolorcat.KingFisher:fastjson-parser_factory:v1.0.1'
 }
 ```
 
@@ -130,6 +130,10 @@ dependencies {
 ```
 
 ## 5. 版本历史
+
+v1.0.1
+
+> 更改注解的 Retention
 
 v1.0.0
 
