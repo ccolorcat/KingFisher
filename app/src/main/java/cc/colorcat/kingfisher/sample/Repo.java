@@ -317,7 +317,7 @@ public class Repo {
     @JSONField(name = "homepage")
     @JsonProperty("homepage")
     @SerializedName("homepage")
-    private Object homepage;
+    private String homepage;
     @JSONField(name = "size")
     @JsonProperty("size")
     @SerializedName("size")
@@ -815,11 +815,11 @@ public class Repo {
         this.svnUrl = svnUrl;
     }
 
-    public Object getHomepage() {
+    public String getHomepage() {
         return homepage;
     }
 
-    public void setHomepage(Object homepage) {
+    public void setHomepage(String homepage) {
         this.homepage = homepage;
     }
 
