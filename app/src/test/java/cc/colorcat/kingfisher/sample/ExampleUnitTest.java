@@ -12,6 +12,7 @@ import cc.colorcat.kingfisher.core.DownPack;
 import cc.colorcat.kingfisher.core.KingFisher;
 import cc.colorcat.kingfisher.parser.gson.GsonParserFactory;
 import cc.colorcat.netbird.DownloadListener;
+import cc.colorcat.netbird.GenericPlatform;
 import cc.colorcat.netbird.NetBird;
 
 import static org.junit.Assert.assertEquals;
@@ -24,6 +25,7 @@ import static org.junit.Assert.assertEquals;
 public class ExampleUnitTest {
     static {
         NetBird netBird = new NetBird.Builder("https://api.github.com/")
+                .platform(new GenericPlatform())
                 .addTailInterceptor(new JsonLoggingTailInterceptor())
                 .enableGzip(true)
                 .build();

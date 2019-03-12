@@ -7,7 +7,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:3.3.2'
         // jitPack
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
 
@@ -49,13 +49,18 @@ project.ext {
     versionCode = 2
     versionName = "1.0.1"
 
+    def netBirdVersion = "v4.3.4"
+
     // dependencies
     supportAppcompat = "com.android.support:appcompat-v7:${supportVersion}"
     testRunner = "com.android.support.test:runner:1.0.2"
     testEspresso = 'com.android.support.test.espresso:espresso-core:3.0.2'
     junit = 'junit:junit:4.12'
 
-    netBird = 'com.github.ccolorcat.NetBird:netbird:v4.3.4'
+    netBird = "com.github.ccolorcat.NetBird:netbird:${netBirdVersion}"
+    netBirdAndroid = "com.github.ccolorcat.NetBird:netbird-android-support:${netBirdVersion}"
+    netBirdLogging = "com.github.ccolorcat.NetBird:netbird-logging-support:${netBirdVersion}"
+    netBirdGsonParser = "com.github.ccolorcat.NetBird:netbird-gson-parser:${netBirdVersion}"
     javapoet = 'com.squareup:javapoet:1.11.1'
     autoService = 'com.google.auto.service:auto-service:1.0-rc4'
     gson = 'com.google.code.gson:gson:2.8.5'
