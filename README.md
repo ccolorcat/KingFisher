@@ -1,6 +1,6 @@
 # KingFisher
 
-用于网络请求，以 [NetBird](https://github.com/ccolorcat/NetBird) 为基础，使用方式与 [retrofit](https://github.com/square/retrofit) 类似。实现方式上 retrofit 使用代理，本项目利用注解编译器自动生成代码。支持上传、下载及相关的进度监听等。
+用于网络请求，以 [NetBird](https://github.com/ccolorcat/NetBird) 为基础，使用方式与 [retrofit](https://github.com/square/retrofit) 类似。实现方式上 retrofit 使用代理，本项目利用注解编译期自动生成代码。支持上传、下载及相关的进度监听等。
 
 ## 1. 特性
 
@@ -52,7 +52,10 @@ public interface TestApi {
 
     @BaseUrl("https://dldir1.qq.com/weixin/android/weixin673android1360.apk")
     @GET
-    Call<File> downWeChat(@Down DownPack pack);
+    Call<File> downloadWeChat(@Down DownPack pack);
+
+    @GET
+    Call<File> downloadWeChat(@Url String url, @Down File savePath);
 }
 ```
 

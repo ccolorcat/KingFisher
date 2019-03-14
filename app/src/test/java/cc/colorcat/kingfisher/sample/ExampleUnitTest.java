@@ -57,6 +57,6 @@ public class ExampleUnitTest {
                 System.out.printf("%d, %d, %d\n", finished, total, percent);
             }
         });
-        System.out.println(api.downWeChat(pack).execute());
+        System.out.println(api.downloadWeChat(pack).execute());
     }
 }
