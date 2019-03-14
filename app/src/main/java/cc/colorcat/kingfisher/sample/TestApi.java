@@ -23,10 +23,8 @@ import cc.colorcat.kingfisher.annotation.Api;
 import cc.colorcat.kingfisher.annotation.BaseUrl;
 import cc.colorcat.kingfisher.annotation.Down;
 import cc.colorcat.kingfisher.annotation.GET;
-import cc.colorcat.kingfisher.annotation.POST;
 import cc.colorcat.kingfisher.annotation.Param;
 import cc.colorcat.kingfisher.annotation.Path;
-import cc.colorcat.kingfisher.annotation.Up;
 import cc.colorcat.kingfisher.annotation.Url;
 import cc.colorcat.kingfisher.core.Call;
 import cc.colorcat.kingfisher.core.DownPack;
@@ -47,12 +45,8 @@ public interface TestApi {
 
     @BaseUrl("https://dldir1.qq.com/weixin/android/weixin673android1360.apk")
     @GET
-    Call<File> downWeChat(@Down DownPack pack);
-
-    @BaseUrl("http://www.imooc.com/")
-    @POST
-    Call<String> upload(@Up(contentType = "image/png") File avatar);
+    Call<File> downloadWeChat(@Down DownPack pack);
 
     @GET
-    Call<File> downWeChat(@Url String downUrl, @Down File savePath);
+    Call<File> downloadWeChat(@Url String url, @Down File savePath);
 }
