@@ -30,7 +30,6 @@ import cc.colorcat.kingfisher.annotation.Path;
 import cc.colorcat.kingfisher.annotation.Up;
 import cc.colorcat.kingfisher.annotation.Url;
 import cc.colorcat.kingfisher.core.Call;
-import cc.colorcat.kingfisher.core.DownPack;
 
 /**
  * Author: cxx

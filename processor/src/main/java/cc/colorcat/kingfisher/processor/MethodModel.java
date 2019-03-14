@@ -274,7 +274,7 @@ class MethodModel {
 
         Builder url(String url) {
             if (this.url != null || this.dynamicUrlName != null) {
-                throw new IllegalArgumentException(" Url and DynamicUrl have only one.");
+                throw new IllegalArgumentException("Url and DynamicUrl have only one.");
             }
             this.url = url;
             return this;
@@ -282,7 +282,7 @@ class MethodModel {
 
         Builder dynamicUrl(String dynamicUrlName) {
             if (this.url != null || this.dynamicUrlName != null) {
-                throw new IllegalArgumentException(" Url and DynamicUrl have only one.");
+                throw new IllegalArgumentException("Url and DynamicUrl have only one.");
             }
             this.dynamicUrlName = dynamicUrlName;
             return this;
