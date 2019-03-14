@@ -20,7 +20,7 @@
 | processor               | 处理注解，并生成代码，必须。 |
 | gson_parser_factory     | 提供 Gson 数据解析支持。     |
 | jackson_parser_factory  | 提供 Jackson 数据解析支持。  |
-| fastjson-parser-factory | 提供 Fastjson 数据解析支持。 |
+| fastjson-parser-factory | 提供 fastjson 数据解析支持。 |
 
 ## 3. 用法举例
 
@@ -99,12 +99,12 @@ java
 ```groovy
 dependencies {
     implementation 'com.github.ccolorcat.NetBird:netbird:v4.3.4'
-    implementation 'com.github.ccolorcat.KingFisher:core:v1.0.1'
-    implementation 'com.github.ccolorcat.KingFisher:annotation:v1.0.1'
-    annotationProcessor 'com.github.ccolorcat.KingFisher:processor:v1.0.1'
-    implementation 'com.github.ccolorcat.KingFisher:gson_parser_factory:v1.0.1'
-    implementation 'com.github.ccolorcat.KingFisher:jackson-parser_factory:v1.0.1'
-    implementation 'com.github.ccolorcat.KingFisher:fastjson-parser_factory:v1.0.1'
+    implementation 'com.github.ccolorcat.KingFisher:core:v2.0.0'
+    implementation 'com.github.ccolorcat.KingFisher:annotation:v2.0.0'
+    annotationProcessor 'com.github.ccolorcat.KingFisher:processor:v2.0.0'
+    implementation 'com.github.ccolorcat.KingFisher:gson_parser_factory:v2.0.0'
+    implementation 'com.github.ccolorcat.KingFisher:jackson-parser_factory:v2.0.0'
+    implementation 'com.github.ccolorcat.KingFisher:fastjson-parser_factory:v2.0.0'
 }
 ```
 
@@ -115,12 +115,12 @@ apply plugin: 'kotlin-kapt'
 ...
 dependencies {
     implementation 'com.github.ccolorcat.NetBird:netbird:v4.3.4'
-    implementation 'com.github.ccolorcat.KingFisher:core:v1.0.1'
-    implementation 'com.github.ccolorcat.KingFisher:annotation:v1.0.1'
-    kapt 'com.github.ccolorcat.KingFisher:processor:v1.0.1'
-    implementation 'com.github.ccolorcat.KingFisher:gson_parser_factory:v1.0.1'
-    implementation 'com.github.ccolorcat.KingFisher:jackson-parser_factory:v1.0.1'
-    implementation 'com.github.ccolorcat.KingFisher:fastjson-parser_factory:v1.0.1'
+    implementation 'com.github.ccolorcat.KingFisher:core:v2.0.0'
+    implementation 'com.github.ccolorcat.KingFisher:annotation:v2.0.0'
+    kapt 'com.github.ccolorcat.KingFisher:processor:v2.0.0'
+    implementation 'com.github.ccolorcat.KingFisher:gson_parser_factory:v2.0.0'
+    implementation 'com.github.ccolorcat.KingFisher:jackson-parser_factory:v2.0.0'
+    implementation 'com.github.ccolorcat.KingFisher:fastjson-parser_factory:v2.0.0'
 }
 ```
 
@@ -133,6 +133,12 @@ dependencies {
 ```
 
 ## 5. 版本历史
+
+v2.0.0
+
+> 1. 上传、下载新增更加简单的使用方式，见**用法举例**。
+> 2. 新增动态 Url 支持。
+> 3. 生成的代码更好看了。
 
 v1.0.1
 
