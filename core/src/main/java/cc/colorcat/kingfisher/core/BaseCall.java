@@ -16,6 +16,7 @@
 
 package cc.colorcat.kingfisher.core;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -61,6 +62,42 @@ public final class BaseCall<T> implements Call<T> {
         builder.add(name, value);
     }
 
+    public void parameter(String name, int value) {
+        builder.add(name, Integer.toString(value));
+    }
+
+    public void parameter(String name, long value) {
+        builder.add(name, Long.toString(value));
+    }
+
+    public void parameter(String name, short value) {
+        builder.add(name, Short.toString(value));
+    }
+
+    public void parameter(String name, double value) {
+        builder.add(name, Double.toString(value));
+    }
+
+    public void parameter(String name, float value) {
+        builder.add(name, Float.toString(value));
+    }
+
+    public void parameter(String name, byte value) {
+        builder.add(name, Byte.toString(value));
+    }
+
+    public void parameter(String name, boolean value) {
+        builder.add(name, Boolean.toString(value));
+    }
+
+    public void parameter(String name, char value) {
+        builder.add(name, Character.toString(value));
+    }
+
+    public void parameter(String name, Object value) {
+        builder.add(name, String.valueOf(value));
+    }
+
     public void parameters(Map<String, String> parameters) {
         for (Map.Entry<String, String> nameAndValue : parameters.entrySet()) {
             builder.add(nameAndValue.getKey(), nameAndValue.getValue());
@@ -82,6 +119,16 @@ public final class BaseCall<T> implements Call<T> {
         Parser parser = FileParser.create(pack.savePath);
         builder.parser(parser);
         builder.downloadListener(pack.listener);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void download(File savePath) {
+        Parser parser = FileParser.create(savePath);
+        builder.parser(parser);
+    }
+
+    public void upload(String name, String contentType, File file) {
+        builder.addFile(name, contentType, file);
     }
 
     public void upload(UpPack pack) {

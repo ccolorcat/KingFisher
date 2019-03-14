@@ -1,6 +1,6 @@
 # KingFisher
 
-用于网络请求，以 [NetBird](https://github.com/ccolorcat/NetBird) 为基础，使用方式与 [retrofit](https://github.com/square/retrofit) 类似。实现方式上 retrofit 使用代理，本项目则是利用注解自动生成代码。支持上传、下载及相关的进度监听等。
+用于网络请求，以 [NetBird](https://github.com/ccolorcat/NetBird) 为基础，使用方式与 [retrofit](https://github.com/square/retrofit) 类似。实现方式上 retrofit 使用代理，本项目利用注解编译器自动生成代码。支持上传、下载及相关的进度监听等。
 
 ## 1. 特性
 
@@ -46,11 +46,11 @@ public interface TestApi {
     @GET("users/{user}/repos")
     Call<List<Repo>> listRepos(@Path("user") String user);
 
-    @Url("http://www.imooc.com/")
+    @BaseUrl("http://www.imooc.com/")
     @GET("api/teacher")
     Call<List<Course>> listCourses(@Param("type") int type, @Param("num") int num);
 
-    @Url("https://dldir1.qq.com/weixin/android/weixin673android1360.apk")
+    @BaseUrl("https://dldir1.qq.com/weixin/android/weixin673android1360.apk")
     @GET
     Call<File> downWeChat(@Down DownPack pack);
 }
@@ -112,12 +112,12 @@ apply plugin: 'kotlin-kapt'
 ...
 dependencies {
     implementation 'com.github.ccolorcat.NetBird:netbird:v4.3.4'
-    implementation 'com.github.ccolorcat.KingFisher:core:v1.0.0'
-    implementation 'com.github.ccolorcat.KingFisher:annotation:v1.0.0'
-    kapt 'com.github.ccolorcat.KingFisher:processor:v1.0.0'
-    implementation 'com.github.ccolorcat.KingFisher:gson_parser_factory:v1.0.0'
-    implementation 'com.github.ccolorcat.KingFisher:jackson-parser_factory:v1.0.0'
-    implementation 'com.github.ccolorcat.KingFisher:fastjson-parser_factory:v1.0.0'
+    implementation 'com.github.ccolorcat.KingFisher:core:v1.0.1'
+    implementation 'com.github.ccolorcat.KingFisher:annotation:v1.0.1'
+    kapt 'com.github.ccolorcat.KingFisher:processor:v1.0.1'
+    implementation 'com.github.ccolorcat.KingFisher:gson_parser_factory:v1.0.1'
+    implementation 'com.github.ccolorcat.KingFisher:jackson-parser_factory:v1.0.1'
+    implementation 'com.github.ccolorcat.KingFisher:fastjson-parser_factory:v1.0.1'
 }
 ```
 

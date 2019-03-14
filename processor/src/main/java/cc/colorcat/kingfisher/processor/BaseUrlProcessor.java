@@ -14,27 +14,20 @@
  * limitations under the License.
  */
 
-package cc.colorcat.kingfisher.core;
+package cc.colorcat.kingfisher.processor;
+
+import javax.lang.model.element.Element;
+
+import cc.colorcat.kingfisher.annotation.BaseUrl;
 
 /**
  * Author: cxx
- * Date: 2018-10-15
+ * Date: 2018-10-08
  * GitHub: https://github.com/ccolorcat
  */
-public abstract class SimpleCallback<T> implements Callback<T> {
+final class BaseUrlProcessor implements AnnotationProcessor<BaseUrl> {
     @Override
-    public void onStart() {
-    }
-
-    @Override
-    public void onSuccess(T result) {
-    }
-
-    @Override
-    public void onFailure(int code, String msg) {
-    }
-
-    @Override
-    public void onFinish() {
+    public void process(MethodModel.Builder builder, Element element, BaseUrl baseUrl) {
+        builder.baseUrl(baseUrl.value());
     }
 }

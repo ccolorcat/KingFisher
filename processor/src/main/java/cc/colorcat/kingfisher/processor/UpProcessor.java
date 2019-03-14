@@ -29,8 +29,8 @@ import cc.colorcat.kingfisher.core.UpPack;
  * GitHub: https://github.com/ccolorcat
  */
 final class UpProcessor implements AnnotationProcessor<Up> {
-    private static String UP_PACK = UpPack.class.getCanonicalName();
-    private static String UP_PACK_LIST = String.format(
+    private static final String UP_PACK = UpPack.class.getCanonicalName();
+    private static final String UP_PACK_LIST = String.format(
             "%s<%s>", List.class.getCanonicalName(), UpPack.class.getCanonicalName()
     );
 
@@ -38,12 +38,23 @@ final class UpProcessor implements AnnotationProcessor<Up> {
     public void process(MethodModel.Builder builder, Element element, Up up) {
         String typeName = element.asType().toString();
         String paramName = element.getSimpleName().toString();
-        if (UP_PACK.equals(typeName)) {
+        String name = up.name();
+        String contentType = up.contentType();
+        if (Utils.FILE.equals(typeName)) {
+            Utils.assertNotBlank(contentType, element + ", contentType is empty.");
+            builder.singleUp(new Triple<>(up.name(), up.contentType(), paramName));
+        } else if (UP_PACK.equals(typeName)) {
+            if (!Utils.isBlank(name) || !Utils.isBlank(contentType)) {
+                throw new IllegalArgumentException(element + " is " + UP_PACK + ", name and contentType must be default");
+            }
             builder.upPack(paramName);
         } else if (UP_PACK_LIST.equals(typeName)) {
+            if (!Utils.isBlank(name) || !Utils.isBlank(contentType)) {
+                throw new IllegalArgumentException(element + " is " + UP_PACK_LIST + ", name and contentType must be default");
+            }
             builder.batchUpPack(paramName);
         } else {
-            throw new IllegalArgumentException(element + ", must be UpPack or List<UpPack>, but is " + typeName);
+            throw new IllegalArgumentException(element + ", must be File/UpPack/List<UpPack>, but is " + typeName);
         }
     }
 }
