@@ -13,14 +13,12 @@ import java.util.List;
 
 import cc.colorcat.kingfisher.core.KingFisher;
 import cc.colorcat.kingfisher.core.SimpleCallback;
-import cc.colorcat.kingfisher.parser.gson.GsonParserFactory;
-import cc.colorcat.netbird.GenericPlatform;
 import cc.colorcat.netbird.Level;
 import cc.colorcat.netbird.Logger;
 import cc.colorcat.netbird.NetBird;
 import cc.colorcat.netbird.android.AndroidPlatform;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Instrumented test, which will execute on an Android device.

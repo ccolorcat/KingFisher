@@ -7,11 +7,10 @@ import java.lang.annotation.Target;
 
 /**
  * Author: cxx
- * Date: 2018-09-30
+ * Date: 2019-03-14
  * GitHub: https://github.com/ccolorcat
  */
-@Target(ElementType.METHOD)
+@Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.SOURCE)
 public @interface Url {
-    String value() default "";
 }

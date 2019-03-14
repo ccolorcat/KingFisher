@@ -20,13 +20,14 @@ import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 
-import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.lang.model.element.ExecutableElement;
 
+import cc.colorcat.kingfisher.annotation.BaseUrl;
+import cc.colorcat.kingfisher.annotation.Url;
 import cc.colorcat.kingfisher.core.BaseCall;
 import cc.colorcat.kingfisher.core.KingFisher;
 import cc.colorcat.kingfisher.core.TypeToken;
@@ -42,8 +43,8 @@ class MethodModel {
     private static final String PATH = "path";
 
     private final ExecutableElement element;
-    private final String url;
-    private final String dynamicUrlName;
+    private final String baseUrl;
+    private final String urlName;
     private final String path;
     private final String method;
     private final List<Pair<String, String>> relativePaths;
@@ -60,8 +61,8 @@ class MethodModel {
 
     private MethodModel(Builder builder) {
         this.element = builder.element;
-        this.url = builder.url;
-        this.dynamicUrlName = builder.dynamicUrlName;
+        this.baseUrl = builder.baseUrl;
+        this.urlName = builder.urlName;
         this.path = builder.path;
         this.method = builder.method;
         this.relativePaths = builder.relativePaths;
@@ -97,10 +98,10 @@ class MethodModel {
     }
 
     private void processUrl(MethodSpec.Builder builder) {
-        if (!Utils.isBlank(dynamicUrlName)) {
-            builder.addStatement("$N.url($N)", CALL, dynamicUrlName);
-        } else if (!Utils.isBlank(url)) {
-            builder.addStatement("$N.url($S)", CALL, url);
+        if (!Utils.isBlank(urlName)) {
+            builder.addStatement("$N.url($N)", CALL, urlName);
+        } else if (!Utils.isBlank(baseUrl)) {
+            builder.addStatement("$N.url($S)", CALL, baseUrl);
         }
     }
 
@@ -177,13 +178,13 @@ class MethodModel {
     static class Builder {
         private ExecutableElement element; // method
         /**
-         * @see cc.colorcat.kingfisher.annotation.Url
+         * @see BaseUrl
          */
-        private String url;
+        private String baseUrl;
         /**
-         * @see cc.colorcat.kingfisher.annotation.DynamicUrl
+         * @see Url
          */
-        private String dynamicUrlName;
+        private String urlName;
         /**
          * @see cc.colorcat.kingfisher.annotation.GET
          * @see cc.colorcat.kingfisher.annotation.HEAD
@@ -272,19 +273,19 @@ class MethodModel {
             return this;
         }
 
-        Builder url(String url) {
-            if (this.url != null || this.dynamicUrlName != null) {
-                throw new IllegalArgumentException("Url and DynamicUrl have only one.");
+        Builder baseUrl(String baseUrl) {
+            if (this.baseUrl != null || this.urlName != null) {
+                throw new IllegalArgumentException("@BaseUrl and @Url have only one.");
             }
-            this.url = url;
+            this.baseUrl = baseUrl;
             return this;
         }
 
-        Builder dynamicUrl(String dynamicUrlName) {
-            if (this.url != null || this.dynamicUrlName != null) {
-                throw new IllegalArgumentException("Url and DynamicUrl have only one.");
+        Builder url(String urlName) {
+            if (this.baseUrl != null || this.urlName != null) {
+                throw new IllegalArgumentException("@BaseUrl and @Url have only one.");
             }
-            this.dynamicUrlName = dynamicUrlName;
+            this.urlName = urlName;
             return this;
         }
 
@@ -310,7 +311,7 @@ class MethodModel {
 
         Builder parameterMap(String name) {
             if (this.paramMapName != null) {
-                throw new IllegalArgumentException(element + ", more than one ParamMap");
+                throw new IllegalArgumentException(element + ", more than one @ParamMap.");
             }
             this.paramMapName = name;
             return this;
@@ -323,7 +324,7 @@ class MethodModel {
 
         Builder headerMap(String name) {
             if (this.headerMapName != null) {
-                throw new IllegalArgumentException(element + ", more than one HeaderMap");
+                throw new IllegalArgumentException(element + ", more than one @HeaderMap.");
             }
             this.headerMapName = name;
             return this;
@@ -331,7 +332,7 @@ class MethodModel {
 
         Builder downSavePath(String savePathName) {
             if (this.downPackName != null || this.savePathName != null) {
-                throw new IllegalArgumentException(element + ", more than one Down");
+                throw new IllegalArgumentException(element + ", more than one @Down.");
             }
             this.savePathName = savePathName;
             return this;
@@ -339,7 +340,7 @@ class MethodModel {
 
         Builder downPack(String name) {
             if (this.downPackName != null || this.savePathName != null) {
-                throw new IllegalArgumentException(element + ", more than one Down");
+                throw new IllegalArgumentException(element + ", more than one @Down.");
             }
             this.downPackName = name;
             return this;
@@ -347,7 +348,7 @@ class MethodModel {
 
         Builder singleUp(Triple<String, String, String> singleUp) {
             if (this.singleUp != null || this.upPackName != null || this.batchUpPackName != null) {
-                throw new IllegalArgumentException(element + ", more than one Up");
+                throw new IllegalArgumentException(element + ", more than one @Up.");
             }
             this.singleUp = singleUp;
             return this;
@@ -355,7 +356,7 @@ class MethodModel {
 
         Builder upPack(String name) {
             if (this.singleUp != null || this.upPackName != null || this.batchUpPackName != null) {
-                throw new IllegalArgumentException(element + ", more than one Up");
+                throw new IllegalArgumentException(element + ", more than one @Up.");
             }
             this.upPackName = name;
             return this;
@@ -363,7 +364,7 @@ class MethodModel {
 
         Builder batchUpPack(String name) {
             if (this.singleUp != null || this.upPackName != null || this.batchUpPackName != null) {
-                throw new IllegalArgumentException(element + ", more than one Up");
+                throw new IllegalArgumentException(element + ", more than one @Up.");
             }
             this.batchUpPackName = name;
             return this;
@@ -375,10 +376,10 @@ class MethodModel {
         }
 
         MethodModel build() {
-            Utils.checkNotNull(method, element + ", no request method");
-            Utils.checkNotNull(returnType, element + ", no return type");
-            if (downPackName != null && !File.class.getCanonicalName().equals(returnType.toString())) {
-                throw new IllegalArgumentException(element + ", must be return Call<File> if has @Down");
+            Utils.checkNotNull(method, element + ", no request method.");
+            Utils.checkNotNull(returnType, element + ", no return type.");
+            if (downPackName != null && !Utils.FILE.equals(returnType.toString())) {
+                throw new IllegalArgumentException(element + ", must be return Call<File> if has @Down.");
             }
             for (int i = 0, size = relativePaths.size(); i < size; ++i) {
                 Pair<String, String> pair = relativePaths.get(i);

@@ -16,8 +16,6 @@
 
 package cc.colorcat.kingfisher.processor;
 
-import java.io.File;
-
 import javax.lang.model.element.Element;
 
 import cc.colorcat.kingfisher.annotation.Down;

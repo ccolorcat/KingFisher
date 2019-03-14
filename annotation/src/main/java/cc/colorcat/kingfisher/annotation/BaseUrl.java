@@ -7,10 +7,11 @@ import java.lang.annotation.Target;
 
 /**
  * Author: cxx
- * Date: 2019-03-14
+ * Date: 2018-09-30
  * GitHub: https://github.com/ccolorcat
  */
-@Target(ElementType.PARAMETER)
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.SOURCE)
-public @interface DynamicUrl {
+public @interface BaseUrl {
+    String value() default "";
 }

@@ -16,7 +16,6 @@
 
 package cc.colorcat.kingfisher.processor;
 
-import java.io.File;
 import java.util.List;
 
 import javax.lang.model.element.Element;

@@ -36,7 +36,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 
 import cc.colorcat.kingfisher.core.Call;
-import cc.colorcat.kingfisher.core.DownPack;
 
 /**
  * Author: cxx

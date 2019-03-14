@@ -46,11 +46,11 @@ public interface TestApi {
     @GET("users/{user}/repos")
     Call<List<Repo>> listRepos(@Path("user") String user);
 
-    @Url("http://www.imooc.com/")
+    @BaseUrl("http://www.imooc.com/")
     @GET("api/teacher")
     Call<List<Course>> listCourses(@Param("type") int type, @Param("num") int num);
 
-    @Url("https://dldir1.qq.com/weixin/android/weixin673android1360.apk")
+    @BaseUrl("https://dldir1.qq.com/weixin/android/weixin673android1360.apk")
     @GET
     Call<File> downWeChat(@Down DownPack pack);
 }
