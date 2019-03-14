@@ -43,6 +43,7 @@ class MethodModel {
 
     private final ExecutableElement element;
     private final String url;
+    private final String dynamicUrlName;
     private final String path;
     private final String method;
     private final List<Pair<String, String>> relativePaths;
@@ -50,7 +51,9 @@ class MethodModel {
     private final String paramMapName;
     private final List<Pair<String, String>> headers;
     private final String headerMapName;
+    private final String savePathName;
     private final String downPackName;
+    private final Triple<String, String, String> singleUp;
     private final String upPackName;
     private final String batchUpPackName;
     private final TypeName returnType;
@@ -58,6 +61,7 @@ class MethodModel {
     private MethodModel(Builder builder) {
         this.element = builder.element;
         this.url = builder.url;
+        this.dynamicUrlName = builder.dynamicUrlName;
         this.path = builder.path;
         this.method = builder.method;
         this.relativePaths = builder.relativePaths;
@@ -65,7 +69,9 @@ class MethodModel {
         this.paramMapName = builder.paramMapName;
         this.headers = builder.headers;
         this.headerMapName = builder.headerMapName;
+        this.savePathName = builder.savePathName;
         this.downPackName = builder.downPackName;
+        this.singleUp = builder.singleUp;
         this.upPackName = builder.upPackName;
         this.batchUpPackName = builder.batchUpPackName;
         this.returnType = builder.returnType;
@@ -91,7 +97,11 @@ class MethodModel {
     }
 
     private void processUrl(MethodSpec.Builder builder) {
-        if (!Utils.isBlank(url)) builder.addStatement("$N.url($S)", CALL, url);
+        if (!Utils.isBlank(dynamicUrlName)) {
+            builder.addStatement("$N.url($N)", CALL, dynamicUrlName);
+        } else if (!Utils.isBlank(url)) {
+            builder.addStatement("$N.url($S)", CALL, url);
+        }
     }
 
     private void processPath(MethodSpec.Builder builder) {
@@ -123,7 +133,8 @@ class MethodModel {
     private void processParameters(MethodSpec.Builder builder) {
         for (int i = 0, size = parameters.size(); i < size; ++i) {
             Pair<String, String> param = parameters.get(i);
-            builder.addStatement("$N.parameter($S, $T.valueOf($N))", CALL, param.first, String.class, param.second);
+//            builder.addStatement("$N.parameter($S, $T.valueOf($N))", CALL, param.first, String.class, param.second);
+            builder.addStatement("$N.parameter($S, $N)", CALL, param.first, param.second);
         }
         if (!Utils.isBlank(paramMapName)) {
             builder.addStatement("$N.parameters($N)", CALL, paramMapName);
@@ -133,7 +144,8 @@ class MethodModel {
     private void processHeaders(MethodSpec.Builder builder) {
         for (int i = 0, size = headers.size(); i < size; ++i) {
             Pair<String, String> header = headers.get(i);
-            builder.addStatement("$N.header($S, $T.valueOf($N))", CALL, header.first, String.class, header.second);
+//            builder.addStatement("$N.header($S, $T.valueOf($N))", CALL, header.first, String.class, header.second);
+            builder.addStatement("$N.header($S, $N)", CALL, header.first, header.second);
         }
         if (!Utils.isBlank(headerMapName)) {
             builder.addStatement("$N.headers($N)", CALL, headerMapName);
@@ -141,13 +153,17 @@ class MethodModel {
     }
 
     private void processDownload(MethodSpec.Builder builder) {
-        if (downPackName != null) {
+        if (savePathName != null) {
+            builder.addStatement("$N.download($N)", CALL, savePathName);
+        } else if (downPackName != null) {
             builder.addStatement("$N.download($N)", CALL, downPackName);
         }
     }
 
     private void processUpload(MethodSpec.Builder builder) {
-        if (upPackName != null) {
+        if (singleUp != null) {
+            builder.addStatement("$N.upload($S, $S, $N)", CALL, singleUp.first, singleUp.second, singleUp.third);
+        } else if (upPackName != null) {
             builder.addStatement("$N.upload($N)", CALL, upPackName);
         } else if (batchUpPackName != null) {
             builder.addStatement("$N.batchUpload($N)", CALL, batchUpPackName);
@@ -164,6 +180,10 @@ class MethodModel {
          * @see cc.colorcat.kingfisher.annotation.Url
          */
         private String url;
+        /**
+         * @see cc.colorcat.kingfisher.annotation.DynamicUrl
+         */
+        private String dynamicUrlName;
         /**
          * @see cc.colorcat.kingfisher.annotation.GET
          * @see cc.colorcat.kingfisher.annotation.HEAD
@@ -211,10 +231,22 @@ class MethodModel {
         /**
          * download file
          *
+         * @see cc.colorcat.kingfisher.annotation.Down
+         */
+        private String savePathName;
+        /**
+         * download file
+         *
          * @see cc.colorcat.kingfisher.core.DownPack
          * @see cc.colorcat.kingfisher.annotation.Down
          */
         private String downPackName;
+        /**
+         * upload file
+         *
+         * @see cc.colorcat.kingfisher.annotation.Up
+         */
+        private Triple<String, String, String> singleUp;
         /**
          * upload file
          *
@@ -241,7 +273,18 @@ class MethodModel {
         }
 
         Builder url(String url) {
+            if (this.url != null || this.dynamicUrlName != null) {
+                throw new IllegalArgumentException(" Url and DynamicUrl have only one.");
+            }
             this.url = url;
+            return this;
+        }
+
+        Builder dynamicUrl(String dynamicUrlName) {
+            if (this.url != null || this.dynamicUrlName != null) {
+                throw new IllegalArgumentException(" Url and DynamicUrl have only one.");
+            }
+            this.dynamicUrlName = dynamicUrlName;
             return this;
         }
 
@@ -286,16 +329,32 @@ class MethodModel {
             return this;
         }
 
+        Builder downSavePath(String savePathName) {
+            if (this.downPackName != null || this.savePathName != null) {
+                throw new IllegalArgumentException(element + ", more than one Down");
+            }
+            this.savePathName = savePathName;
+            return this;
+        }
+
         Builder downPack(String name) {
-            if (this.downPackName != null) {
+            if (this.downPackName != null || this.savePathName != null) {
                 throw new IllegalArgumentException(element + ", more than one Down");
             }
             this.downPackName = name;
             return this;
         }
 
+        Builder singleUp(Triple<String, String, String> singleUp) {
+            if (this.singleUp != null || this.upPackName != null || this.batchUpPackName != null) {
+                throw new IllegalArgumentException(element + ", more than one Up");
+            }
+            this.singleUp = singleUp;
+            return this;
+        }
+
         Builder upPack(String name) {
-            if (this.upPackName != null || this.batchUpPackName != null) {
+            if (this.singleUp != null || this.upPackName != null || this.batchUpPackName != null) {
                 throw new IllegalArgumentException(element + ", more than one Up");
             }
             this.upPackName = name;
@@ -303,7 +362,7 @@ class MethodModel {
         }
 
         Builder batchUpPack(String name) {
-            if (this.upPackName != null || this.batchUpPackName != null) {
+            if (this.singleUp != null || this.upPackName != null || this.batchUpPackName != null) {
                 throw new IllegalArgumentException(element + ", more than one Up");
             }
             this.batchUpPackName = name;

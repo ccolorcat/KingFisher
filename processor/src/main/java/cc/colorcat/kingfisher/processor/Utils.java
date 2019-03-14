@@ -21,6 +21,7 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.WildcardTypeName;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -43,25 +44,27 @@ import cc.colorcat.kingfisher.core.DownPack;
  * GitHub: https://github.com/ccolorcat
  */
 final class Utils {
+    static final String FILE = File.class.getCanonicalName();
+
+    private static final String STRING = String.class.getCanonicalName();
     private static final String STRING_MAP = String.format(
             "%s<%s,%s>",
             Map.class.getCanonicalName(),
             String.class.getCanonicalName(),
             String.class.getCanonicalName()
     );
-    private static final String DOWN_PACK = DownPack.class.getCanonicalName();
+
+    static void assertString(Element element) {
+        String typeName = element.asType().toString();
+        if (!STRING.equals(typeName)) {
+            throw new IllegalArgumentException(element + " must be String, but is " + typeName);
+        }
+    }
 
     static void assertStringMap(Element element) {
         String typeName = element.asType().toString();
         if (!STRING_MAP.equals(typeName)) {
             throw new IllegalArgumentException(element + " must be " + STRING_MAP + " but is " + typeName);
-        }
-    }
-
-    static void assertDownPack(Element element) {
-        String typeName = element.asType().toString();
-        if (!DOWN_PACK.equals(typeName)) {
-            throw new IllegalArgumentException(element + " must be DownPack but is " + typeName);
         }
     }
 
@@ -136,6 +139,10 @@ final class Utils {
         if (value == null) {
             throw new NullPointerException(msg);
         }
+    }
+
+    static void assertNotBlank(String text, String msg) {
+        if (isBlank(text)) throw new IllegalArgumentException(msg);
     }
 
     static boolean isBlank(String text) {

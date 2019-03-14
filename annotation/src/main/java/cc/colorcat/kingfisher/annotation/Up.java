@@ -29,4 +29,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.SOURCE)
 public @interface Up {
+    String name() default "";
+
+    String contentType() default "";
 }

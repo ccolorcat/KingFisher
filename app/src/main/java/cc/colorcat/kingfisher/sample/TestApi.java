@@ -21,9 +21,13 @@ import java.util.List;
 
 import cc.colorcat.kingfisher.annotation.Api;
 import cc.colorcat.kingfisher.annotation.Down;
+import cc.colorcat.kingfisher.annotation.DynamicUrl;
 import cc.colorcat.kingfisher.annotation.GET;
+import cc.colorcat.kingfisher.annotation.Header;
+import cc.colorcat.kingfisher.annotation.POST;
 import cc.colorcat.kingfisher.annotation.Param;
 import cc.colorcat.kingfisher.annotation.Path;
+import cc.colorcat.kingfisher.annotation.Up;
 import cc.colorcat.kingfisher.annotation.Url;
 import cc.colorcat.kingfisher.core.Call;
 import cc.colorcat.kingfisher.core.DownPack;
@@ -44,5 +48,13 @@ public interface TestApi {
 
     @Url("https://dldir1.qq.com/weixin/android/weixin673android1360.apk")
     @GET
-    Call<File> downWeChat(@Down DownPack pack);
+    Call<File> downWeChat(@Header("test") String test, @Down File pack);
+
+    @Url("http://www.imooc.com/")
+    @POST
+    Call<String> upload(@Up(contentType = "image/png") File avatar);
+
+//    @Url("https://dldir1.qq.com/weixin/android/weixin673android1360.apk")
+    @GET
+    Call<File> downWeChat(@DynamicUrl String downUrl, @Header("test") String test, @Down File savePath);
 }

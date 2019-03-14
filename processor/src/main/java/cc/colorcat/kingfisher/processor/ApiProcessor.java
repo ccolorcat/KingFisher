@@ -41,6 +41,7 @@ import javax.tools.Diagnostic;
 import cc.colorcat.kingfisher.annotation.Api;
 import cc.colorcat.kingfisher.annotation.DELETE;
 import cc.colorcat.kingfisher.annotation.Down;
+import cc.colorcat.kingfisher.annotation.DynamicUrl;
 import cc.colorcat.kingfisher.annotation.GET;
 import cc.colorcat.kingfisher.annotation.HEAD;
 import cc.colorcat.kingfisher.annotation.Header;
@@ -80,6 +81,7 @@ public class ApiProcessor extends AbstractProcessor {
         processors.put(Header.class, new HeaderProcessor());
         processors.put(HeaderMap.class, new HeaderMapProcessor());
         processors.put(Url.class, new UrlProcessor());
+        processors.put(DynamicUrl.class, new DynamicUrlProcessor());
         processors.put(Path.class, new PathProcessor());
         processors.put(Down.class, new DownProcessor());
         processors.put(Up.class, new UpProcessor());

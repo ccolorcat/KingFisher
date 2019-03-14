@@ -28,6 +28,7 @@ import cc.colorcat.kingfisher.annotation.Header;
 final class HeaderProcessor implements AnnotationProcessor<Header> {
     @Override
     public void process(MethodModel.Builder builder, Element element, Header header) {
+        Utils.assertString(element);
         builder.addHeader(new Pair<>(header.value(), element.getSimpleName().toString()));
     }
 }

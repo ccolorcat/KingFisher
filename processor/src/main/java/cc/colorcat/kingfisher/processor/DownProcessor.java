@@ -16,9 +16,12 @@
 
 package cc.colorcat.kingfisher.processor;
 
+import java.io.File;
+
 import javax.lang.model.element.Element;
 
 import cc.colorcat.kingfisher.annotation.Down;
+import cc.colorcat.kingfisher.core.DownPack;
 
 /**
  * Author: cxx
@@ -26,9 +29,18 @@ import cc.colorcat.kingfisher.annotation.Down;
  * GitHub: https://github.com/ccolorcat
  */
 final class DownProcessor implements AnnotationProcessor<Down> {
+    private static final String DOWN_PACK = DownPack.class.getCanonicalName();
+
     @Override
     public void process(MethodModel.Builder builder, Element element, Down down) {
-        Utils.assertDownPack(element);
-        builder.downPack(element.getSimpleName().toString());
+        String typeName = element.asType().toString();
+        String paramName = element.getSimpleName().toString();
+        if (Utils.FILE.equals(typeName)) {
+            builder.downSavePath(paramName);
+        } else if (DOWN_PACK.equals(typeName)) {
+            builder.downPack(paramName);
+        } else {
+            throw new IllegalArgumentException(element + ", must be File/DownPack, but is " + typeName);
+        }
     }
 }
