@@ -99,12 +99,12 @@ java
 ```groovy
 dependencies {
     implementation 'com.github.ccolorcat.NetBird:netbird:v4.3.4'
-    implementation 'com.github.ccolorcat.KingFisher:core:v2.0.0'
-    implementation 'com.github.ccolorcat.KingFisher:annotation:v2.0.0'
-    annotationProcessor 'com.github.ccolorcat.KingFisher:processor:v2.0.0'
-    implementation 'com.github.ccolorcat.KingFisher:gson_parser_factory:v2.0.0'
-    implementation 'com.github.ccolorcat.KingFisher:jackson-parser_factory:v2.0.0'
-    implementation 'com.github.ccolorcat.KingFisher:fastjson-parser_factory:v2.0.0'
+    implementation 'com.github.ccolorcat.KingFisher:core:v2.1.0'
+    implementation 'com.github.ccolorcat.KingFisher:annotation:v2.1.0'
+    annotationProcessor 'com.github.ccolorcat.KingFisher:processor:v2.1.0'
+    implementation 'com.github.ccolorcat.KingFisher:gson_parser_factory:v2.1.0'
+    implementation 'com.github.ccolorcat.KingFisher:jackson-parser_factory:v2.1.0'
+    implementation 'com.github.ccolorcat.KingFisher:fastjson-parser_factory:v2.1.0'
 }
 ```
 
@@ -115,12 +115,12 @@ apply plugin: 'kotlin-kapt'
 ...
 dependencies {
     implementation 'com.github.ccolorcat.NetBird:netbird:v4.3.4'
-    implementation 'com.github.ccolorcat.KingFisher:core:v2.0.0'
-    implementation 'com.github.ccolorcat.KingFisher:annotation:v2.0.0'
-    kapt 'com.github.ccolorcat.KingFisher:processor:v2.0.0'
-    implementation 'com.github.ccolorcat.KingFisher:gson_parser_factory:v2.0.0'
-    implementation 'com.github.ccolorcat.KingFisher:jackson-parser_factory:v2.0.0'
-    implementation 'com.github.ccolorcat.KingFisher:fastjson-parser_factory:v2.0.0'
+    implementation 'com.github.ccolorcat.KingFisher:core:v2.1.0'
+    implementation 'com.github.ccolorcat.KingFisher:annotation:v2.1.0'
+    kapt 'com.github.ccolorcat.KingFisher:processor:v2.1.0'
+    implementation 'com.github.ccolorcat.KingFisher:gson_parser_factory:v2.1.0'
+    implementation 'com.github.ccolorcat.KingFisher:jackson-parser_factory:v2.1.0'
+    implementation 'com.github.ccolorcat.KingFisher:fastjson-parser_factory:v2.1.0'
 }
 ```
 
@@ -133,6 +133,14 @@ dependencies {
 ```
 
 ## 5. 版本历史
+
+v2.1.0
+
+> 添加覆盖自带的 StringParserFactory 的方法，使用情景说明如下：
+>
+> 自带 StringParserFactory 在解析字符串时，首先会检测服务器返回的编码信息，如果有则使用服务器返回的编码格式进行解析，如果没有则使用 UTF-8。
+>
+> 如果服务器没有返回字符编码信息，而字符又不是 UTF-8 编码，则解析出来的字符串可能是乱码，此时可调用此方法自定义字符解析。
 
 v2.0.0
 
