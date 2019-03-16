@@ -134,6 +134,10 @@ dependencies {
 
 ## 5. 版本历史
 
+v2.1.1
+
+> 增加对 @Path 注解的参数类型的检查。
+
 v2.1.0
 
 > 添加覆盖自带的 StringParserFactory 的方法，使用情景说明如下：
