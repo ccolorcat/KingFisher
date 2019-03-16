@@ -66,11 +66,10 @@ public class KingFisher {
         private String baseUrl;
         private NetBird netBird;
         private List<ParserFactory<?>> factories;
+        private ParserFactory<String> stringFactory;
 
         public Builder() {
-            factories = new ArrayList<>(8);
-            factories.add(new FakeFileParserFactory());
-            factories.add(new StringParserFactory());
+            factories = new ArrayList<>(6);
         }
 
         public Builder baseUrl(String baseUrl) {
@@ -90,10 +89,17 @@ public class KingFisher {
             return this;
         }
 
+        public Builder override(ParserFactory<String> factory) {
+            this.stringFactory = factory;
+            return this;
+        }
+
         public synchronized void initialize() {
             if (netBird == null) {
                 netBird = new NetBird.Builder(baseUrl).build();
             }
+            factories.add(0, stringFactory != null ? stringFactory : new StringParserFactory());
+            factories.add(0, new FakeFileParserFactory());
             KingFisher.instance = new KingFisher(this);
         }
     }
