@@ -48,5 +48,5 @@ public interface TestApi {
     Call<File> downloadWeChat(@Down DownPack pack);
 
     @GET
-    Call<File> downloadWeChat(@Url String url, @Down File savePath);
+    Call<File> download(@Url String url, @Down File savePath);
 }
