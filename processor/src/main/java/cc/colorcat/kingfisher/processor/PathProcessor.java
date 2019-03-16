@@ -28,6 +28,7 @@ import cc.colorcat.kingfisher.annotation.Path;
 final class PathProcessor implements AnnotationProcessor<Path> {
     @Override
     public void process(MethodModel.Builder builder, Element element, Path path) {
+        Utils.assertString(element);
         builder.addRelativePath(new Pair<>(path.value(), element.getSimpleName().toString()));
     }
 }
