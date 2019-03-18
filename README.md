@@ -99,12 +99,12 @@ java
 ```groovy
 dependencies {
     implementation 'com.github.ccolorcat.NetBird:netbird:v4.3.4'
-    implementation 'com.github.ccolorcat.KingFisher:core:v2.1.0'
-    implementation 'com.github.ccolorcat.KingFisher:annotation:v2.1.0'
-    annotationProcessor 'com.github.ccolorcat.KingFisher:processor:v2.1.0'
-    implementation 'com.github.ccolorcat.KingFisher:gson_parser_factory:v2.1.0'
-    implementation 'com.github.ccolorcat.KingFisher:jackson-parser_factory:v2.1.0'
-    implementation 'com.github.ccolorcat.KingFisher:fastjson-parser_factory:v2.1.0'
+    implementation 'com.github.ccolorcat.KingFisher:core:v2.1.2'
+    implementation 'com.github.ccolorcat.KingFisher:annotation:v2.1.2'
+    annotationProcessor 'com.github.ccolorcat.KingFisher:processor:v2.1.2'
+    implementation 'com.github.ccolorcat.KingFisher:gson_parser_factory:v2.1.2'
+    implementation 'com.github.ccolorcat.KingFisher:jackson-parser_factory:v2.1.2'
+    implementation 'com.github.ccolorcat.KingFisher:fastjson-parser_factory:v2.1.2'
 }
 ```
 
@@ -115,12 +115,12 @@ apply plugin: 'kotlin-kapt'
 ...
 dependencies {
     implementation 'com.github.ccolorcat.NetBird:netbird:v4.3.4'
-    implementation 'com.github.ccolorcat.KingFisher:core:v2.1.0'
-    implementation 'com.github.ccolorcat.KingFisher:annotation:v2.1.0'
-    kapt 'com.github.ccolorcat.KingFisher:processor:v2.1.0'
-    implementation 'com.github.ccolorcat.KingFisher:gson_parser_factory:v2.1.0'
-    implementation 'com.github.ccolorcat.KingFisher:jackson-parser_factory:v2.1.0'
-    implementation 'com.github.ccolorcat.KingFisher:fastjson-parser_factory:v2.1.0'
+    implementation 'com.github.ccolorcat.KingFisher:core:v2.1.2'
+    implementation 'com.github.ccolorcat.KingFisher:annotation:v2.1.2'
+    kapt 'com.github.ccolorcat.KingFisher:processor:v2.1.2'
+    implementation 'com.github.ccolorcat.KingFisher:gson_parser_factory:v2.1.2'
+    implementation 'com.github.ccolorcat.KingFisher:jackson-parser_factory:v2.1.2'
+    implementation 'com.github.ccolorcat.KingFisher:fastjson-parser_factory:v2.1.2'
 }
 ```
 
@@ -133,6 +133,11 @@ dependencies {
 ```
 
 ## 5. 版本历史
+
+v2.1.2
+
+> 1. 允许添加 null 参数和 header，但会被忽略。
+> 2. bug 修复。
 
 v2.1.1
 
