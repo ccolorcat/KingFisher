@@ -59,7 +59,9 @@ public final class BaseCall<T> implements Call<T> {
     }
 
     public void parameter(String name, String value) {
-        builder.add(name, value);
+        if (value != null) {
+            builder.add(name, value);
+        }
     }
 
     public void parameter(String name, int value) {
@@ -95,22 +97,36 @@ public final class BaseCall<T> implements Call<T> {
     }
 
     public void parameter(String name, Object value) {
-        builder.add(name, String.valueOf(value));
+        if (value != null) {
+            builder.add(name, value.toString());
+        }
     }
 
     public void parameters(Map<String, String> parameters) {
+        String name, value;
         for (Map.Entry<String, String> nameAndValue : parameters.entrySet()) {
-            builder.add(nameAndValue.getKey(), nameAndValue.getValue());
+            name = nameAndValue.getKey();
+            value = nameAndValue.getValue();
+            if (name != null && value != null) {
+                builder.add(name, value);
+            }
         }
     }
 
     public void header(String name, String value) {
-        builder.addHeader(name, value);
+        if (value != null) {
+            builder.addHeader(name, value);
+        }
     }
 
     public void headers(Map<String, String> headers) {
+        String name, value;
         for (Map.Entry<String, String> nameAndValue : headers.entrySet()) {
-            builder.add(nameAndValue.getKey(), nameAndValue.getValue());
+            name = nameAndValue.getKey();
+            value = nameAndValue.getValue();
+            if (name != null && value != null) {
+                builder.addHeader(name, value);
+            }
         }
     }
 

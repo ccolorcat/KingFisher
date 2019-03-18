@@ -46,8 +46,8 @@ project.ext {
     // android.defaultConfig
     minSdkVersion = 15
     targetSdkVersion = sdkVersion
-    versionCode = 5
-    versionName = "2.1.1"
+    versionCode = 6
+    versionName = "2.1.2"
 
     def netBirdVersion = "v4.3.4"
 
