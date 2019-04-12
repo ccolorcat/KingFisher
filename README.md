@@ -99,12 +99,12 @@ java
 ```groovy
 dependencies {
     implementation 'com.github.ccolorcat.NetBird:netbird:v4.3.4'
-    implementation 'com.github.ccolorcat.KingFisher:core:v2.1.2'
-    implementation 'com.github.ccolorcat.KingFisher:annotation:v2.1.2'
-    annotationProcessor 'com.github.ccolorcat.KingFisher:processor:v2.1.2'
-    implementation 'com.github.ccolorcat.KingFisher:gson_parser_factory:v2.1.2'
-    implementation 'com.github.ccolorcat.KingFisher:jackson-parser_factory:v2.1.2'
-    implementation 'com.github.ccolorcat.KingFisher:fastjson-parser_factory:v2.1.2'
+    implementation 'com.github.ccolorcat.KingFisher:core:v2.2.2'
+    implementation 'com.github.ccolorcat.KingFisher:annotation:v2.2.2'
+    annotationProcessor 'com.github.ccolorcat.KingFisher:processor:v2.2.2'
+    implementation 'com.github.ccolorcat.KingFisher:gson_parser_factory:v2.2.2'
+    implementation 'com.github.ccolorcat.KingFisher:jackson-parser_factory:v2.2.2'
+    implementation 'com.github.ccolorcat.KingFisher:fastjson-parser_factory:v2.2.2'
 }
 ```
 
@@ -115,12 +115,12 @@ apply plugin: 'kotlin-kapt'
 ...
 dependencies {
     implementation 'com.github.ccolorcat.NetBird:netbird:v4.3.4'
-    implementation 'com.github.ccolorcat.KingFisher:core:v2.1.2'
-    implementation 'com.github.ccolorcat.KingFisher:annotation:v2.1.2'
-    kapt 'com.github.ccolorcat.KingFisher:processor:v2.1.2'
-    implementation 'com.github.ccolorcat.KingFisher:gson_parser_factory:v2.1.2'
-    implementation 'com.github.ccolorcat.KingFisher:jackson-parser_factory:v2.1.2'
-    implementation 'com.github.ccolorcat.KingFisher:fastjson-parser_factory:v2.1.2'
+    implementation 'com.github.ccolorcat.KingFisher:core:v2.2.2'
+    implementation 'com.github.ccolorcat.KingFisher:annotation:v2.2.2'
+    kapt 'com.github.ccolorcat.KingFisher:processor:v2.2.2'
+    implementation 'com.github.ccolorcat.KingFisher:gson_parser_factory:v2.2.2'
+    implementation 'com.github.ccolorcat.KingFisher:jackson-parser_factory:v2.2.2'
+    implementation 'com.github.ccolorcat.KingFisher:fastjson-parser_factory:v2.2.2'
 }
 ```
 
