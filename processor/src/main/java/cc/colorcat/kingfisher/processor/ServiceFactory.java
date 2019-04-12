@@ -60,7 +60,6 @@ final class ServiceFactory {
         JavaFile.builder(pkgName, service).build().writeTo(filer);
     }
 
-
     static class Builder {
         private PackageElement packageElement;
         private TypeElement interfaceElement;
@@ -77,6 +76,11 @@ final class ServiceFactory {
             return this;
         }
 
+        Builder setClassSimpleName(String name) {
+            this.classSimpleName = name.trim();
+            return this;
+        }
+
         Builder addMethodModel(MethodModel model) {
             methods.add(model.generateCode());
             return this;
@@ -85,7 +89,9 @@ final class ServiceFactory {
         ServiceFactory build() {
             Utils.checkNotNull(packageElement, "packageElement is null");
             Utils.checkNotNull(interfaceElement, "interfaceElement is null");
-            classSimpleName = interfaceElement.getSimpleName() + "Service";
+            if (classSimpleName.isEmpty()) {
+                classSimpleName = interfaceElement.getSimpleName() + "Service";
+            }
             return new ServiceFactory(this);
         }
     }

@@ -109,8 +109,9 @@ public class ApiProcessor extends AbstractProcessor {
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
         for (Element api : roundEnvironment.getElementsAnnotatedWith(Api.class)) {
             ServiceFactory.Builder serviceBuilder = new ServiceFactory.Builder()
+                    .setPackageElement(utils.getPackageOf(api))
                     .setInterfaceElement(Utils.assertInterface(api))
-                    .setPackageElement(utils.getPackageOf(api));
+                    .setClassSimpleName(api.getAnnotation(Api.class).value());
 
             for (Element e : api.getEnclosedElements()) {
                 ExecutableElement ee = Utils.assertMethod(e);

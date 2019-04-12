@@ -41,7 +41,7 @@ public interface TestApi {
 
     @BaseUrl("http://www.imooc.com/")
     @GET("api/teacher")
-    Call<Result<List<Course>>> listCourses(@Param("type") int type, @Param("num") int num);
+    Call<List<Course>> listCourses(@Param("type") int type, @Param("num") int num);
 
     @BaseUrl("https://dldir1.qq.com/weixin/android/weixin673android1360.apk")
     @GET
