@@ -20,6 +20,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 
+import java.nio.charset.Charset;
+
 import cc.colorcat.netbird.logging.LoggingTailInterceptor;
 
 /**
@@ -30,6 +32,17 @@ import cc.colorcat.netbird.logging.LoggingTailInterceptor;
 public class JsonLoggingTailInterceptor extends LoggingTailInterceptor {
     private Gson mGson = new GsonBuilder().setPrettyPrinting().create();
     private JsonParser mParser = new JsonParser();
+
+    public JsonLoggingTailInterceptor() {
+    }
+
+    public JsonLoggingTailInterceptor(boolean deUnicode) {
+        super(deUnicode);
+    }
+
+    public JsonLoggingTailInterceptor(Charset charsetIfAbsent, boolean deUnicode) {
+        super(charsetIfAbsent, deUnicode);
+    }
 
     @Override
     protected String formatResponse(String content, String contentType) {

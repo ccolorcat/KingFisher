@@ -40,6 +40,7 @@ import javax.tools.Diagnostic;
 
 import cc.colorcat.kingfisher.annotation.Api;
 import cc.colorcat.kingfisher.annotation.BaseUrl;
+import cc.colorcat.kingfisher.annotation.Client;
 import cc.colorcat.kingfisher.annotation.DELETE;
 import cc.colorcat.kingfisher.annotation.Down;
 import cc.colorcat.kingfisher.annotation.GET;
@@ -85,6 +86,7 @@ public class ApiProcessor extends AbstractProcessor {
         processors.put(Path.class, new PathProcessor());
         processors.put(Down.class, new DownProcessor());
         processors.put(Up.class, new UpProcessor());
+        processors.put(Client.class, new ClientProcessor());
     }
 
     @Override

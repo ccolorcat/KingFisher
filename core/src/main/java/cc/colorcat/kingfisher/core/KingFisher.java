@@ -18,7 +18,9 @@ package cc.colorcat.kingfisher.core;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cc.colorcat.netbird.NetBird;
 import cc.colorcat.netbird.Parser;
@@ -28,33 +30,42 @@ import cc.colorcat.netbird.Parser;
  * Date: 2018-09-29
  * GitHub: https://github.com/ccolorcat
  */
-public class KingFisher {
+public final class KingFisher {
+    private static final String DEFAULT_CLIENT = KingFisher.class.getSimpleName() + ".default.client";
     private static KingFisher instance;
 
     public static <T> BaseCall<T> newCall(Type typeOfT) {
+        return newCall(DEFAULT_CLIENT, typeOfT);
+    }
+
+    public static <T> BaseCall<T> newCall(String clientName, Type typeOfT) {
         if (instance == null) {
             throw new IllegalStateException("KingFisher uninitialized");
         }
-        return instance.createCall(typeOfT);
+        return instance.createCall(clientName, typeOfT);
     }
 
-    private NetBird netBird;
-    private List<ParserFactory<?>> parserFactories;
+    private Map<String, NetBird> clients;
+    private List<ParserFactory<?>> factories;
 
     private KingFisher(Builder builder) {
-        this.netBird = builder.netBird;
-        this.parserFactories = Utils.immutableList(builder.factories);
+        this.clients = Utils.immutableMap(builder.clients);
+        this.factories = Utils.immutableList(builder.factories);
     }
 
-    private <T> BaseCall<T> createCall(Type typeOfT) {
+    private <T> BaseCall<T> createCall(String clientName, Type typeOfT) {
+        NetBird client = clients.get(clientName);
+        if (client == null) {
+            throw new NullPointerException("unregister Client for name: " + clientName);
+        }
         Parser<? extends T> parser = newParser(typeOfT);
-        return new BaseCall<>(netBird, parser);
+        return new BaseCall<>(client, parser);
     }
 
     @SuppressWarnings("unchecked")
     private <T> Parser<? extends T> newParser(Type typeOfT) {
-        for (int i = 0, size = parserFactories.size(); i < size; ++i) {
-            Parser<?> parser = parserFactories.get(i).newParser(typeOfT);
+        for (int i = 0, size = factories.size(); i < size; ++i) {
+            Parser<?> parser = factories.get(i).newParser(typeOfT);
             if (parser != null) {
                 return (Parser<? extends T>) parser;
             }
@@ -64,11 +75,12 @@ public class KingFisher {
 
     public static class Builder {
         private String baseUrl;
-        private NetBird netBird;
+        private Map<String, NetBird> clients;
         private List<ParserFactory<?>> factories;
         private ParserFactory<String> stringFactory;
 
         public Builder() {
+            clients = new HashMap<>(4);
             factories = new ArrayList<>(6);
         }
 
@@ -77,8 +89,21 @@ public class KingFisher {
             return this;
         }
 
-        public Builder client(NetBird netBird) {
-            this.netBird = netBird;
+        public Builder client(NetBird client) {
+            Utils.checkNotNull(client, "client == null");
+            clients.put(KingFisher.DEFAULT_CLIENT, client);
+            return this;
+        }
+
+        public Builder registerClient(String name, NetBird client) {
+            Utils.checkNotNull(name, "name == null");
+            Utils.checkNotNull(client, "client == null");
+            clients.put(name, client);
+            return this;
+        }
+
+        public Builder unregisterClient(String name) {
+            clients.remove(name);
             return this;
         }
 
@@ -95,8 +120,8 @@ public class KingFisher {
         }
 
         public synchronized void initialize() {
-            if (netBird == null) {
-                netBird = new NetBird.Builder(baseUrl).build();
+            if (!clients.containsKey(KingFisher.DEFAULT_CLIENT)) {
+                clients.put(KingFisher.DEFAULT_CLIENT, new NetBird.Builder(baseUrl).build());
             }
             factories.add(0, stringFactory != null ? stringFactory : new StringParserFactory());
             factories.add(0, new FakeFileParserFactory());

@@ -18,7 +18,9 @@ package cc.colorcat.kingfisher.core;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Author: cxx
@@ -28,6 +30,10 @@ import java.util.List;
 final class Utils {
     static <T> List<T> immutableList(List<T> list) {
         return Collections.unmodifiableList(new ArrayList<>(list));
+    }
+
+    static <K, V> Map<K, V> immutableMap(Map<K, V> map) {
+        return Collections.unmodifiableMap(new HashMap<>(map));
     }
 
     static <T> void checkNotNull(T t, String msg) {

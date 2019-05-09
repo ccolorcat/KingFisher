@@ -21,6 +21,7 @@ import java.util.List;
 
 import cc.colorcat.kingfisher.annotation.Api;
 import cc.colorcat.kingfisher.annotation.BaseUrl;
+import cc.colorcat.kingfisher.annotation.Client;
 import cc.colorcat.kingfisher.annotation.Down;
 import cc.colorcat.kingfisher.annotation.GET;
 import cc.colorcat.kingfisher.annotation.Param;
@@ -36,10 +37,10 @@ import cc.colorcat.kingfisher.core.DownPack;
  */
 @Api
 public interface TestApi {
+    @Client("github")
     @GET("users/{user}/repos")
     Call<List<Repo>> listRepos(@Path("user") String user);
 
-    @BaseUrl("http://www.imooc.com/")
     @GET("api/teacher")
     Call<List<Course>> listCourses(@Param("type") int type, @Param("num") int num);
 
