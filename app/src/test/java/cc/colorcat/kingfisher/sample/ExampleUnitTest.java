@@ -36,20 +36,23 @@ public class ExampleUnitTest {
         GSON = new GsonBuilder().create();
         Platform platform = new GenericPlatform();
         LOGGER = platform.logger();
-        NetBird defaultClient = new NetBird.Builder("http://www.imooc.com/")
-                .platform(platform)
-                .addTailInterceptor(new JsonLoggingTailInterceptor(true))
-                .enableGzip(true)
-                .build();
-        NetBird gitHubClient = new NetBird.Builder("https://api.github.com/")
+
+        NetBird defaultClient = new NetBird.Builder("https://api.github.com/")
                 .platform(platform)
                 .addTailInterceptor(new JsonLoggingTailInterceptor())
                 .enableGzip(true)
                 .build();
 
+        NetBird moocClient = new NetBird.Builder("http://www.imooc.com/")
+                .platform(platform)
+                .addTailInterceptor(new JsonLoggingTailInterceptor(true))
+                .enableGzip(true)
+                .build();
+
         new KingFisher.Builder()
-                .client(defaultClient)
-                .registerClient("github", gitHubClient)
+                .defaultClient(defaultClient)
+                .registerClient("mooc", moocClient)
+                .registerParserFactory("mooc", new ResultParserFactory<>(GSON))
                 .addParserFactory(new GsonParserFactory<>(GSON))
                 .initialize();
         SERVICE = new TestApiService();
@@ -94,15 +97,13 @@ public class ExampleUnitTest {
 
     @Test
     public void testMooc() throws IOException {
-        Parser<List<Course>> parser = new ResultParser<List<Course>>(GSON) {};
-        List<Course> result = SERVICE.listCourses(4, 30).parser(parser).execute();
+        List<Course> result = SERVICE.listCourses(4, 30).execute();
         System.out.println(result);
     }
 
     @Test
     public void testMoocAsync() {
-        Parser<List<Course>> parser = new ResultParser<List<Course>>(GSON) {};
-        SERVICE.listCourses(4, 30).parser(parser).enqueue(new SimpleCallback<List<Course>>() {
+        SERVICE.listCourses(4, 30).enqueue(new SimpleCallback<List<Course>>() {
             @Override
             public void onStart() {
                 super.onStart();

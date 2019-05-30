@@ -57,8 +57,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private void testMooc() {
-        Parser<List<Course>> parser = new ResultParser<List<Course>>(new Gson()) {};
-        mService.listCourses(4, 30).parser(parser).enqueue(new SimpleCallback<List<Course>>() {
+        mService.listCourses(4, 30).enqueue(new SimpleCallback<List<Course>>() {
             @Override
             public void onStart() {
                 super.onStart();

@@ -37,10 +37,10 @@ import cc.colorcat.kingfisher.core.DownPack;
  */
 @Api
 public interface TestApi {
-    @Client("github")
     @GET("users/{user}/repos")
     Call<List<Repo>> listRepos(@Path("user") String user);
 
+    @Client("mooc")
     @GET("api/teacher")
     Call<List<Course>> listCourses(@Param("type") int type, @Param("num") int num);
 
