@@ -16,9 +16,9 @@
 
 package cc.colorcat.kingfisher.core;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,19 +47,15 @@ public final class KingFisher {
     }
 
     private Map<String, Client> clients;
-    private List<ParserFactory<?>> highPriorityFactories;
-    private List<ParserFactory<?>> lowPriorityFactories;
 
     private KingFisher(Builder builder) {
         this.clients = Utils.immutableMap(builder.clients);
-        this.highPriorityFactories = Utils.immutableList(builder.highPriorityFactories);
-        this.lowPriorityFactories = Utils.immutableList(builder.lowPriorityFactories);
     }
 
     private <T> BaseCall<T> createCall(String clientName, Type typeOfT) {
         Client client = clients.get(clientName);
         if (client == null) {
-            throw new NullPointerException("no register Client for name: " + clientName);
+            throw new NullPointerException("No client registered with " + clientName);
         }
         Parser<? extends T> parser = newParser(client, typeOfT);
         return new BaseCall<>(client.bird, parser);
@@ -67,36 +63,25 @@ public final class KingFisher {
 
     @SuppressWarnings("unchecked")
     private <T> Parser<? extends T> newParser(Client client, Type typeOfT) {
-        List<ParserFactory<?>> factories = getParserFactories(client);
+        List<ParserFactory<?>> factories = client.factories;
         for (int i = 0, size = factories.size(); i < size; ++i) {
             Parser<?> parser = factories.get(i).newParser(typeOfT);
             if (parser != null) {
                 return (Parser<? extends T>) parser;
             }
         }
-        throw new UnsupportedOperationException("no ParserFactory supported for " + typeOfT);
-    }
-
-    private List<ParserFactory<?>> getParserFactories(Client client) {
-        int size = highPriorityFactories.size() + client.factories.size() + lowPriorityFactories.size();
-        List<ParserFactory<?>> factories = new ArrayList<>(size);
-        factories.addAll(highPriorityFactories);
-        factories.addAll(client.factories);
-        factories.addAll(lowPriorityFactories);
-        return factories;
+        throw new UnsupportedOperationException("no ParserFactory support " + typeOfT);
     }
 
     public static class Builder {
         private String baseUrl;
         private Map<String, Client> clients;
-        private List<ParserFactory<?>> highPriorityFactories;
-        private List<ParserFactory<?>> lowPriorityFactories;
+        private List<ParserFactory<?>> factories;
         private ParserFactory<String> stringFactory;
 
         public Builder() {
             clients = new HashMap<>(4);
-            highPriorityFactories = new ArrayList<>(2);
-            lowPriorityFactories = new ArrayList<>(6);
+            factories = new ArrayList<>(6);
         }
 
         public Builder baseUrl(String baseUrl) {
@@ -108,48 +93,11 @@ public final class KingFisher {
             return registerClient(KingFisher.DEFAULT_CLIENT, bird);
         }
 
-        public Builder registerClient(String clientName, NetBird bird) {
-            Utils.checkNotNull(clientName, "clientName == null");
-            Utils.checkNotNull(bird, "bird == null");
-            clients.put(clientName, new Client(bird));
-            return this;
-        }
-
-        public Builder unregisterClient(String clientName) {
-            clients.remove(clientName);
-            return this;
-        }
-
-        public Builder registerParserFactory(String clientName, ParserFactory<?> factory) {
-            Utils.checkNotNull(clientName, "clientName == null");
-            Utils.checkNotNull(factory, "factory == null");
-            Client client = this.clients.get(clientName);
-            if (client == null) {
-                throw new NullPointerException("unregister Client for name: " + clientName);
-            }
-            client.addParserFactory(factory);
-            return this;
-        }
-
-        public Builder unregisterParserFactory(String clientName, ParserFactory<?> factory) {
-            Utils.checkNotNull(clientName, "clientName == null");
-            Client client = this.clients.get(clientName);
-            if (client != null) {
-                client.removeParserFactory(factory);
-            }
-            return this;
-        }
-
         public Builder addParserFactory(ParserFactory<?> factory) {
             Utils.checkNotNull(factory, "factory == null");
-            if (!lowPriorityFactories.contains(factory)) {
-                lowPriorityFactories.add(factory);
+            if (!factories.contains(factory)) {
+                factories.add(factory);
             }
-            return this;
-        }
-
-        public Builder removeParserFactory(ParserFactory<?> factory) {
-            lowPriorityFactories.remove(factory);
             return this;
         }
 
@@ -158,12 +106,41 @@ public final class KingFisher {
             return this;
         }
 
+        public Builder registerClient(String clientName, NetBird bird) {
+            Utils.checkNotNull(clientName, "clientName == null");
+            Utils.checkNotNull(bird, "bird == null");
+            clients.put(clientName, new Client(bird));
+            return this;
+        }
+
+        public Builder registerParserFactory(String clientName, ParserFactory<?> factory) {
+            Utils.checkNotNull(clientName, "clientName == null");
+            Utils.checkNotNull(factory, "factory == null");
+            Client client = this.clients.get(clientName);
+            if (client == null) {
+                throw new NullPointerException("No client registered with " + clientName);
+            }
+            client.addParserFactory(factory);
+            return this;
+        }
+
         public synchronized void initialize() {
+            if (KingFisher.instance != null) {
+                throw new IllegalStateException("KingFisher has already been initialized.");
+            }
             if (!clients.containsKey(KingFisher.DEFAULT_CLIENT)) {
                 defaultClient(new NetBird.Builder(baseUrl).build());
             }
-            highPriorityFactories.add(new FakeFileParserFactory());
-            highPriorityFactories.add(stringFactory != null ? stringFactory : new StringParserFactory());
+            ParserFactory<File> fileFactory = new FakeFileParserFactory();
+            if (stringFactory == null) {
+                stringFactory = new StringParserFactory();
+            }
+            for (Map.Entry<String, Client> entry : clients.entrySet()) {
+                Client client = entry.getValue();
+                client.factories.add(0, stringFactory);
+                client.factories.add(0, fileFactory);
+                client.factories.addAll(factories);
+            }
             KingFisher.instance = new KingFisher(this);
         }
     }

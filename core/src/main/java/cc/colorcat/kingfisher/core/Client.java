@@ -19,12 +19,10 @@ final class Client {
         this.factories = new ArrayList<>();
     }
 
-    boolean addParserFactory(ParserFactory<?> factory) {
-        return !this.factories.contains(factory) && this.factories.add(factory);
-    }
-
-    boolean removeParserFactory(ParserFactory<?> factory) {
-        return this.factories.remove(factory);
+    void addParserFactory(ParserFactory<?> factory) {
+        if (!this.factories.contains(factory)) {
+            this.factories.add(factory);
+        }
     }
 
     @Override
