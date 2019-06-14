@@ -45,7 +45,7 @@ public class ExampleUnitTest {
 
         NetBird moocClient = new NetBird.Builder("http://www.imooc.com/")
                 .platform(platform)
-                .addTailInterceptor(new JsonLoggingTailInterceptor(true))
+                .addTailInterceptor(new JsonLoggingTailInterceptor())
                 .enableGzip(true)
                 .build();
 
@@ -70,7 +70,7 @@ public class ExampleUnitTest {
             @Override
             public void onStart() {
                 super.onStart();
-                log("onStart", Level.DEBUG);
+                log("onStart", Level.VERBOSE);
             }
 
             @Override
@@ -88,7 +88,7 @@ public class ExampleUnitTest {
             @Override
             public void onFinish() {
                 super.onFinish();
-                log("onFinish", Level.DEBUG);
+                log("onFinish", Level.VERBOSE);
                 threadNotify();
             }
         });
@@ -107,7 +107,7 @@ public class ExampleUnitTest {
             @Override
             public void onStart() {
                 super.onStart();
-                log("onStart", Level.DEBUG);
+                log("onStart", Level.VERBOSE);
             }
 
             @Override
@@ -125,7 +125,7 @@ public class ExampleUnitTest {
             @Override
             public void onFinish() {
                 super.onFinish();
-                log("onFinish", Level.DEBUG);
+                log("onFinish", Level.VERBOSE);
                 threadNotify();
             }
         });
@@ -134,15 +134,48 @@ public class ExampleUnitTest {
 
     @Test
     public void testDownload() throws IOException {
-        TestApi api = new TestApiService();
-        File savePath = new File(System.getProperty("user.home"), "weChat.apk");
-        DownPack pack = DownPack.create(savePath, new DownloadListener() {
+        System.out.println(SERVICE.downloadWeChat(createWeChatDownPack()).execute());
+    }
+
+    @Test
+    public void testDownloadAsync() {
+        SERVICE.downloadWeChat(createWeChatDownPack()).enqueue(new SimpleCallback<File>() {
             @Override
-            public void onChanged(long finished, long total, int percent) {
-                System.out.printf("%d, %d, %d\n", finished, total, percent);
+            public void onStart() {
+                super.onStart();
+                log("onStart", Level.VERBOSE);
+            }
+
+            @Override
+            public void onSuccess(File result) {
+                super.onSuccess(result);
+                log("onSuccess, result: " + result, Level.DEBUG);
+            }
+
+            @Override
+            public void onFailure(int code, String msg) {
+                super.onFailure(code, msg);
+                log("onFailure, code=" + code + ", msg=" + msg, Level.ERROR);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                log("onFinish", Level.VERBOSE);
+                threadNotify();
             }
         });
-        System.out.println(api.downloadWeChat(pack).execute());
+        threadWait();
+    }
+
+    private static DownPack createWeChatDownPack() {
+        File savePath = new File(System.getProperty("user.home"), "weChat.apk");
+        return DownPack.create(savePath, new DownloadListener() {
+            @Override
+            public void onChanged(long finished, long total, int percent) {
+                log(finished + "/" + total + ", " + percent, Level.VERBOSE);
+            }
+        });
     }
 
     private static void log(String msg, Level level) {
