@@ -38,7 +38,7 @@ public class ExampleInstrumentedTest {
             .enableGzip(true)
             .build();
         new KingFisher.Builder()
-            .client(netBird)
+            .defaultClient(netBird)
             .addParserFactory(new GsonParserFactory<>(new Gson()))
             .initialize();
     }

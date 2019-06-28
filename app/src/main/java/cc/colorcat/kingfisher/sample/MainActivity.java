@@ -18,12 +18,97 @@ package cc.colorcat.kingfisher.sample;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+
+import com.google.gson.Gson;
+
+import java.util.List;
+
+import cc.colorcat.kingfisher.core.SimpleCallback;
+import cc.colorcat.netbird.Level;
+import cc.colorcat.netbird.Parser;
 
 public class MainActivity extends AppCompatActivity {
+    private final TestApi mService = new TestApiService();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        findViewById(R.id.btn_test_github).setOnClickListener(mClick);
+        findViewById(R.id.btn_test_mooc).setOnClickListener(mClick);
+    }
 
+    private View.OnClickListener mClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.btn_test_github:
+                    testGithub();
+                    break;
+                case R.id.btn_test_mooc:
+                    testMooc();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    private void testMooc() {
+        mService.listCourses(4, 30).enqueue(new SimpleCallback<List<Course>>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+                Log.v("Mooc", "onStart");
+            }
+
+            @Override
+            public void onSuccess(List<Course> result) {
+                super.onSuccess(result);
+                Log.d("Mooc", "onSuccess, result=" + result);
+            }
+
+            @Override
+            public void onFailure(int code, String msg) {
+                super.onFailure(code, msg);
+                Log.e("Mooc", "code=" + code + ", msg=" + msg);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                Log.v("Mooc", "onFinish");
+            }
+        });
+    }
+
+    private void testGithub() {
+        mService.listRepos("ccolorcat").enqueue(new SimpleCallback<List<Repo>>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+                Log.v("Github", "onStart");
+            }
+
+            @Override
+            public void onSuccess(List<Repo> result) {
+                super.onSuccess(result);
+                Log.d("Github", "onSuccess, result:\n" + result);
+            }
+
+            @Override
+            public void onFailure(int code, String msg) {
+                super.onFailure(code, msg);
+                Log.e("Github", "onFailure, code=" + code + ", msg=" + msg);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                Log.v("Github", "onFinish");
+            }
+        });
     }
 }

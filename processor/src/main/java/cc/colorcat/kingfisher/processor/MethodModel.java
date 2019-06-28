@@ -43,6 +43,7 @@ class MethodModel {
     private static final String PATH = "path";
 
     private final ExecutableElement element;
+    private final String client;
     private final String baseUrl;
     private final String urlName;
     private final String path;
@@ -61,6 +62,7 @@ class MethodModel {
 
     private MethodModel(Builder builder) {
         this.element = builder.element;
+        this.client = builder.client;
         this.baseUrl = builder.baseUrl;
         this.urlName = builder.urlName;
         this.path = builder.path;
@@ -93,8 +95,12 @@ class MethodModel {
     }
 
     private void processCall(MethodSpec.Builder builder) {
-        builder.addStatement("$T $N = new $T<$T>() {}.actualType()", Type.class, TYPE, TypeToken.class, returnType)
-                .addStatement("$T<$T> $N = $T.newCall($N)", BaseCall.class, returnType, CALL, KingFisher.class, TYPE);
+        builder.addStatement("$T $N = new $T<$T>() {}.actualType()", Type.class, TYPE, TypeToken.class, returnType);
+        if (client == null) {
+            builder.addStatement("$T<$T> $N = $T.newCall($N)", BaseCall.class, returnType, CALL, KingFisher.class, TYPE);
+        } else {
+            builder.addStatement("$T<$T> $N = $T.newCall($S, $N)", BaseCall.class, returnType, CALL, KingFisher.class, client, TYPE);
+        }
     }
 
     private void processUrl(MethodSpec.Builder builder) {
@@ -177,6 +183,7 @@ class MethodModel {
 
     static class Builder {
         private ExecutableElement element; // method
+        private String client;
         /**
          * @see BaseUrl
          */
@@ -270,6 +277,11 @@ class MethodModel {
 
         Builder element(ExecutableElement methodElement) {
             this.element = methodElement;
+            return this;
+        }
+
+        Builder client(String clientName) {
+            this.client = clientName;
             return this;
         }
 
