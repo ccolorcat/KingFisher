@@ -7,6 +7,7 @@ buildscript {
         jcenter()
     }
     dependencies {
+        //noinspection GradleDependency
         classpath 'com.android.tools.build:gradle:3.3.2'
         // jitPack
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
@@ -46,8 +47,8 @@ project.ext {
     // android.defaultConfig
     minSdkVersion = 15
     targetSdkVersion = sdkVersion
-    versionCode = 7
-    versionName = "2.2.2"
+    versionCode = 8
+    versionName = "3.0.0"
 
     def netBirdVersion = "v4.3.4"
 
