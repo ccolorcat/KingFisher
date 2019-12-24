@@ -16,12 +16,12 @@
 
 package cc.colorcat.kingfisher.core;
 
-import cc.colorcat.netbird.MRequest;
+import cc.colorcat.netbird.Listener;
 
 /**
  * Author: cxx
  * Date: 2018-09-29
  * GitHub: https://github.com/ccolorcat
  */
-public interface Callback<T> extends MRequest.Listener<T> {
+public interface Callback<T> extends Listener<T> {
 }

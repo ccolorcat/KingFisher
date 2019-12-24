@@ -20,6 +20,7 @@ import cc.colorcat.netbird.Logger;
 import cc.colorcat.netbird.NetBird;
 import cc.colorcat.netbird.Parser;
 import cc.colorcat.netbird.Platform;
+import cc.colorcat.netbird.StateIOException;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -80,9 +81,9 @@ public class ExampleUnitTest {
             }
 
             @Override
-            public void onFailure(int code, String msg) {
-                super.onFailure(code, msg);
-                log("onFailure, code=" + code + ", msg=" + msg, Level.ERROR);
+            public void onFailure(StateIOException cause) {
+                super.onFailure(cause);
+                log("onFailure " + cause, Level.ERROR);
             }
 
             @Override
@@ -117,9 +118,9 @@ public class ExampleUnitTest {
             }
 
             @Override
-            public void onFailure(int code, String msg) {
-                super.onFailure(code, msg);
-                log("onFailure, code=" + code + ", msg=" + msg, Level.ERROR);
+            public void onFailure(StateIOException cause) {
+                super.onFailure(cause);
+                log("onFailure " + cause, Level.ERROR);
             }
 
             @Override
@@ -153,9 +154,9 @@ public class ExampleUnitTest {
             }
 
             @Override
-            public void onFailure(int code, String msg) {
-                super.onFailure(code, msg);
-                log("onFailure, code=" + code + ", msg=" + msg, Level.ERROR);
+            public void onFailure(StateIOException cause) {
+                super.onFailure(cause);
+                log("onFailure " + cause, Level.ERROR);
             }
 
             @Override

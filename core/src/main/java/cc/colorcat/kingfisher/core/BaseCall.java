@@ -22,10 +22,10 @@ import java.util.List;
 import java.util.Map;
 
 import cc.colorcat.netbird.FileParser;
-import cc.colorcat.netbird.MRequest;
 import cc.colorcat.netbird.Method;
 import cc.colorcat.netbird.NetBird;
 import cc.colorcat.netbird.Parser;
+import cc.colorcat.netbird.Request;
 
 /**
  * Author: cxx
@@ -34,12 +34,14 @@ import cc.colorcat.netbird.Parser;
  */
 public final class BaseCall<T> implements Call<T> {
     private NetBird netBird;
-    private MRequest.Builder<T> builder;
+    private Request.Builder builder;
+    private Parser<? extends T> parser;
     private Object tag;
 
     BaseCall(NetBird netBird, Parser<? extends T> parser) {
         this.netBird = netBird;
-        this.builder = new MRequest.Builder<>(parser);
+        this.builder = new Request.Builder();
+        this.parser = parser;
     }
 
     public void url(String url) {
@@ -132,15 +134,13 @@ public final class BaseCall<T> implements Call<T> {
 
     @SuppressWarnings("unchecked")
     public void download(DownPack pack) {
-        Parser parser = FileParser.create(pack.savePath);
-        builder.parser(parser);
+        parser = (Parser<? extends T>) FileParser.create(pack.savePath);
         builder.downloadListener(pack.listener);
     }
 
     @SuppressWarnings("unchecked")
     public void download(File savePath) {
-        Parser parser = FileParser.create(savePath);
-        builder.parser(parser);
+        parser = (Parser<? extends T>) FileParser.create(savePath);
     }
 
     public void upload(String name, String contentType, File file) {
@@ -159,19 +159,18 @@ public final class BaseCall<T> implements Call<T> {
 
     @Override
     public Call<T> parser(Parser<? extends T> parser) {
-        builder.parser(parser);
+        this.parser = parser;
         return this;
     }
 
     @Override
     public T execute() throws IOException {
-        return netBird.execute(request());
+        return netBird.newCall(request()).execute(parser);
     }
 
     @Override
     public void enqueue(Callback<T> callback) {
-        builder.listener(callback);
-        netBird.send(request());
+        netBird.newCall(request()).enqueue(parser, callback);
     }
 
     @Override
@@ -188,8 +187,8 @@ public final class BaseCall<T> implements Call<T> {
         }
     }
 
-    private MRequest<T> request() {
-        MRequest<T> request = builder.build();
+    private Request request() {
+        Request request = builder.build();
         tag = request.tag();
         return request;
     }

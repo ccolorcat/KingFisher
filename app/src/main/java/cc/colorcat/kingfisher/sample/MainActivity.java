@@ -16,20 +16,17 @@
 
 package cc.colorcat.kingfisher.sample;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-
-import com.google.gson.Gson;
 
 import java.util.List;
 
 import cc.colorcat.kingfisher.core.SimpleCallback;
-import cc.colorcat.netbird.Level;
-import cc.colorcat.netbird.Parser;
+import cc.colorcat.netbird.StateIOException;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     private final TestApi mService = new TestApiService();
 
     @Override
@@ -70,10 +67,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Mooc", "onSuccess, result=" + result);
             }
 
+
             @Override
-            public void onFailure(int code, String msg) {
-                super.onFailure(code, msg);
-                Log.e("Mooc", "code=" + code + ", msg=" + msg);
+            public void onFailure(StateIOException cause) {
+                super.onFailure(cause);
+                Log.e("Mooc", "onFailure " + cause);
             }
 
             @Override
@@ -99,9 +97,9 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(int code, String msg) {
-                super.onFailure(code, msg);
-                Log.e("Github", "onFailure, code=" + code + ", msg=" + msg);
+            public void onFailure(StateIOException cause) {
+                super.onFailure(cause);
+                Log.e("Github", "onFailure " + cause);
             }
 
             @Override
