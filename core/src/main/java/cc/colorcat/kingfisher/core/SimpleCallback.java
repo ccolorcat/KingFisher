@@ -16,6 +16,8 @@
 
 package cc.colorcat.kingfisher.core;
 
+import cc.colorcat.netbird.StateIOException;
+
 /**
  * Author: cxx
  * Date: 2018-10-15
@@ -31,7 +33,7 @@ public abstract class SimpleCallback<T> implements Callback<T> {
     }
 
     @Override
-    public void onFailure(int code, String msg) {
+    public void onFailure(StateIOException cause) {
     }
 
     @Override
