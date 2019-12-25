@@ -93,14 +93,14 @@ final class Utils {
 
     static TypeElement assertInterface(Element element) {
         if (element.getKind() != ElementKind.INTERFACE) {
-            throw new RuntimeException(element + " is not interface");
+            throw new RuntimeException(element + " is not interface.");
         }
         return (TypeElement) element;
     }
 
     static ExecutableElement assertMethod(Element element) {
         if (element.getKind() != ElementKind.METHOD) {
-            throw new RuntimeException(element + " is not method");
+            throw new RuntimeException(element + " is not method.");
         }
         return (ExecutableElement) element;
     }
@@ -114,13 +114,16 @@ final class Utils {
             }
             List<TypeName> typeArguments = ptn.typeArguments;
             if (typeArguments.size() != 1) {
-                throw new IllegalArgumentException(element + " returns " + typeName + ", it must have one and only one generic type");
+                throw new IllegalArgumentException(element + " returns " + typeName + ", it must have one and only one generic type.");
             }
             TypeName actualTypeName = typeArguments.get(0);
             assertNoWildcardType(actualTypeName, element);
             return actualTypeName;
         }
-        throw new IllegalArgumentException(element + " returns " + typeName + ", it missing type parameter");
+        throw new IllegalArgumentException(element + " returns " + typeName
+                + ", it must be " + Call.class.getCanonicalName()
+                + " and have one and only one generic type."
+        );
     }
 
     private static void assertNoWildcardType(TypeName typeName, ExecutableElement element) {
